@@ -8,3 +8,5 @@ upper right corner of the tray). Needs to be IOS or multiplatform. Some work was
 last year, including collecting a lot of LEGO data. It would be great to see tis project continue
 forward.
 
+# Trello
+https://trello.com/w/dustblockblues
