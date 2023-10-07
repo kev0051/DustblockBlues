@@ -1,32 +1,32 @@
 {
-  "name": "lml",
+  "name": "DustblockBlues",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
-    "@expo/webpack-config": "^0.12.52",
+    "@expo/webpack-config": "^19.0.0",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-material/core": "^1.3.7",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
-    "@rneui/base": "^4.0.0-rc.6", //reeee
+    "@rneui/base": "^4.0.0-rc.6",
     "@rneui/themed": "^4.0.0-rc.6",
-    "@teachablemachine/image": "^0.8.5", //reeee
+    "@teachablemachine/image": "^0.8.5",
     "@tensorflow-models/mobilenet": "^2.1.0",
     "@tensorflow/tfjs": "^4.0.0",
     "@tensorflow/tfjs-backend-cpu": "^4.0.0",
     "@tensorflow/tfjs-backend-webgl": "^4.0.0",
     "@tensorflow/tfjs-core": "^4.0.0",
-    "@tensorflow/tfjs-react-native": "^0.8.0", //reeee
+    "@tensorflow/tfjs-react-native": "^0.8.0",
     "axios": "^1.3.6",
     "canvas": "^2.10.2",
-    "expo": "^49.0.0",
+    "expo": "^49.0.13",
     "expo-camera": "~13.4.4",
     "expo-gl": "~13.0.1",
     "expo-gl-cpp": "^11.4.0",
@@ -37,7 +37,7 @@
     "expo-speech": "~11.3.0",
     "expo-status-bar": "~1.6.0",
     "jpeg-js": "^0.4.4",
-    "numjs": "^0.16.1", //REEEEE
+    "numjs": "^0.16.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
@@ -56,7 +56,8 @@
     "react-native-torch": "^1.2.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.19.6",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "expo-splash-screen": "~0.20.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
