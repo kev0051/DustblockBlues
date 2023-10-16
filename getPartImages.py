@@ -14,10 +14,10 @@ import subprocess
 ldview_path = "LDView64"
 
 # Path to your LDraw file
-ldraw_file = r"C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)\2780.dat"
+ldraw_file = r"C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\data\2780 (4121715)\2780.dat"
 
 # Path to save snapshots
-output_dir = r"C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)\images"
+output_dir = r"C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\data\2780 (4121715)\images"
 
 # Loop through DefaultLatitude values from 0 to 90 (increasing by 3 each time)
 count = 0
