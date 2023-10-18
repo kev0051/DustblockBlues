@@ -112,7 +112,7 @@ import * as Speech from 'expo-speech';
       //live stream predictions, glitches in the beginning because model is still loading, needs to toggle button on and off to unglitch
       let frame = 0;
       const computeRecognitionEveryNFrames = 60;
-      const handleCameraStream = async (images: IterableIterator<tf.Tensor3D>) => {
+      const handleCameraStream = async (images: IterableIterator<tf.Tensor3D> /* currently broken b/c requires depreciated modules */) => {
             //loops every frame
             const loop = async () => {
                 if(frame % computeRecognitionEveryNFrames === 0){
@@ -186,7 +186,7 @@ import * as Speech from 'expo-speech';
   //very ineffecient, if image can be converted to tensor then solution might be a lot faster
  
  
-  const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
+  const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D> /* Also broken b/c depreciated modules */) => {
     const loop = async () => { 
       setTensorImage(images.next().value)
       requestAnimationFrame(loop);

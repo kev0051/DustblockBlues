@@ -36,6 +36,7 @@ export default function MainContainer(){
     const [themeMode, setThemeMode] = useState(false);
     const [ttsMode, setTtsMode] = useState(false);
 
+    //useEffect and eventListener for changing settings in the app
     useEffect(() => {
       let eventListener = EventRegister.addEventListener("changeTheme", (data) => {
         setThemeMode(data);
@@ -55,14 +56,15 @@ export default function MainContainer(){
     });
 
   
-
+    // JavaScript for navigation objects - including bar and settings
     return(
 
         <ttsContext.Provider value = {ttsMode === true ? tts.true : tts.false}>
         <themeContext.Provider value = {themeMode === true ? theme.dark : theme.light}>
-        <NavigationContainer >
+        <NavigationContainer // Container for the current screen selected in the navigation menu
+        >
         <Tab.Navigator 
-          initialRouteName={homeName}
+          initialRouteName={homeName} // Set navigation to home page initially
           screenOptions={({ route }) => ({
             tabBarButton: [
               legoPartsName,
@@ -78,7 +80,8 @@ export default function MainContainer(){
             tabBarIcon: ({ focused}) => {
               let outlined;
               let rn = route.name;
-  
+
+              // Used to highlight selected navigation option red, and format the navigation objects
               if (rn === homeName) {
                 outlined = focused ? '#ff0000' : '#808080';
                 return (

@@ -77,7 +77,7 @@ function LegoPartScreen({ route, navigation}){
                     >
                     <Image
                         style={{ width: '100%', height: "100%", resizeMode: 'contain' }}
-                        source={{ uri: imageURL }}
+                        source={{ uri: imageURL }} // minor problems with imageURL
                     />
                     </Pressable>
                 </View>

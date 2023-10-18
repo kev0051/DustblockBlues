@@ -6,10 +6,6 @@ import axios from 'axios';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useFocusEffect } from '@react-navigation/native';
 
-
-
-
-
   //camera screen function with navigation as argument
   function LocateScreen({route,navigation}){
     
@@ -48,7 +44,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
     let cameraRef = useRef();
 
-
+    // takes a pciture roughly every second
     let frame1 = 0;
     const computeRecognitionEveryNFrames1 = 60;
     function takePic(){
@@ -76,9 +72,10 @@ import { useFocusEffect } from '@react-navigation/native';
               base64: true,
             };
             image =  await ImageManipulator.manipulateAsync(image.uri, actions, saveOptions);
-            // image = await loadImageBase64(image.uri);
-            // MediaLibrary.saveToLibraryAsync(image.uri)
-      
+            //image = await loadImageBase64(image.uri);
+            //MediaLibrary.saveToLibraryAsync(image.uri)
+            
+            // API Call to detect.roboflow.com -- Currently broken, returns request failed with status code 500
             axios({
                 method: "POST",
                 url: "https://detect.roboflow.com/lego-detection-fsxai/8",
@@ -93,9 +90,10 @@ import { useFocusEffect } from '@react-navigation/native';
             })
             .then(function(response) {
               let res = []
+              //console.log(response.data.predictions) // use for checking the response data from roboflow API call
               try{
-                if (route.params.partId){
-                  // console.log("ran")
+                if (route.params.partId /* always null currently */){
+                   console.log("ran")
 
                     for(var i = 0; i < response.data.predictions.length; i++ ){
                       if(response.data.predictions[i].class === route.params.partId){
