@@ -6,7 +6,7 @@ expo start
 
 Or if facing issues, try:
 
-yard add expo@^48.0.0
+yard add expo@^49.0.0
 
 npx expo-doctor
 
