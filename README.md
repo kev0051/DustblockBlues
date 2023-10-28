@@ -1,6 +1,12 @@
 # How to Deploy
 
-yard add expo@^47.0.0
+yarn install
+
+expo start
+
+Or if facing issues, try:
+
+yard add expo@^48.0.0
 
 npx expo-doctor
 
