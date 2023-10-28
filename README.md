@@ -2,7 +2,7 @@
 
 yarn install
 
-expo start
+npx expo start
 
 Or if facing issues, try:
 
@@ -12,7 +12,7 @@ npx expo-doctor
 
 npx expo install --check
 
-expo start
+npx expo start
 
 # TIL
 nodemodules handled by package managers. 
