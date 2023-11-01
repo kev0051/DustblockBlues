@@ -1,5 +1,5 @@
 # Virtual Environment name: capstone
-# getPartImages.py FUNCTION -- Obtains ~1800 images of a given part from every angle
+# getPartImages.py FUNCTION -- Obtain top-down transparent images of a part
 
 # https://trevorsandy.github.io/lpub3d/assets/docs/ldview/Help.html
 
@@ -49,6 +49,7 @@ elif orientation == 2:
             f"-DefaultColor3={part_color}", 
             f"-DefaultLatitude={i}",
             f"-DefaultLongitude=180",
+            f"-SaveAlpha=True",
             f"-SaveSnapshot={output_dir}/{part_number}-{count:04d}.png"
         ]
         count += 1
