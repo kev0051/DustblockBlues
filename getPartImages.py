@@ -1,39 +1,58 @@
 # Virtual Environment name: capstone
-# getPartImages.py FUNCTION -- Obtains ~1800 images of a given part from every angle 
+# getPartImages.py FUNCTION -- Obtains ~1800 images of a given part from every angle
 
 # https://trevorsandy.github.io/lpub3d/assets/docs/ldview/Help.html
-# LDView64 "C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)\2780.dat" -DefaultLatitude=0 -DefaultLongitude=0 -SaveSnapshot="2780-0001.png"
-# LDView64 "C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)\2780.dat" -DefaultLatitude=0 -DefaultLongitude=0 -SaveDir="C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)" -SaveSnapshot="2780-0001.png"
-
-# CURRENT SAVE COMMAND 
-# LDView64 "C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)\2780.dat" -DefaultLatitude=0 -DefaultLongitude=0 -SaveSnapshot="C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\New Part Models\2780 (4121715)\2780-0001.png"
 
 import subprocess
+import os
 
-# Path to LDView executable
-ldview_path = "LDView64"
+# Define your part number and part name as variables
+part_number = "2780"
+part_name = "4121715"
+part_color = "0x333333" # black 0x333333 | red 
+orientation = 1
+
+# Path to LDView application bundle on a Mac
+ldview_app_path = "LDView.app/Contents/MacOS/LDView"
 
 # Path to your LDraw file
-ldraw_file = r"C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\data\2780 (4121715)\2780.dat"
+ldraw_file = f"/Users/kyvang/Documents/Capstone/data/{part_number} ({part_name})/{part_number}.dat"
 
 # Path to save snapshots
-output_dir = r"C:\Users\kyvan\Documents\College Documents\2023-2024\Capstone 1\AI\data\2780 (4121715)\images"
+output_dir = f"/Users/kyvang/Documents/Capstone/data/{part_number} ({part_name})/images"
 
-# Loop through DefaultLatitude values from 0 to 90 (increasing by 3 each time)
+# Create the output directory if it doesn't exist
+os.makedirs(output_dir, exist_ok=True)
+
+# Loop through DefaultLatitude values from 0 to 90 (increasing by 10 each time)
 count = 0
-for i in range(0, 91, 3):
-    for j in range(0, 181, 3):
+
+if orientation == 1: 
+    for i in range(0, 181, 10):
         ldview_command = [
-            ldview_path,
+            ldview_app_path,
             ldraw_file,
-            f"-DefaultLatitude={i}",
-            f"-DefaultLongitude={j}",
-            f"-SaveSnapshot={output_dir}\\2780-{count:04d}.png"  # Use {i:04d} to format the number with leading zeros
+            f"-DefaultColor3={part_color}", 
+            f"-DefaultLatitude=90",
+            f"-DefaultLongitude={i}",
+            f"-SaveAlpha=True",
+            f"-SaveSnapshot={output_dir}/{part_number}-{count:04d}.png"
         ]
-        count = count+1
+        count += 1
         # Execute the LDView command
         subprocess.run(ldview_command)
-
-    
+elif orientation == 2: 
+    for i in range(0, 91, 10):
+        ldview_command = [
+            ldview_app_path,
+            ldraw_file,
+            f"-DefaultColor3={part_color}", 
+            f"-DefaultLatitude={i}",
+            f"-DefaultLongitude=180",
+            f"-SaveSnapshot={output_dir}/{part_number}-{count:04d}.png"
+        ]
+        count += 1
+        # Execute the LDView command
+        subprocess.run(ldview_command)
 
 print("Snapshot generation complete.")
