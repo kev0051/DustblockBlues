@@ -7,10 +7,10 @@ import subprocess
 import os
 
 # Define your part number and part name as variables
-part_number = "2780"
-part_name = "4121715"
-part_color = "0x333333" # black 0x333333 | red 
-orientation = 1
+part_number = "60483"
+part_name = "6265091"
+part_color = "0x333333" # black 0x333333 | red 0xff0000
+orientation = 2 # 1 for 180 (symmetrical), 2 for 360 (asymmetrical)
 
 # Path to LDView application bundle on a Mac
 ldview_app_path = "LDView.app/Contents/MacOS/LDView"
@@ -24,7 +24,7 @@ output_dir = f"/Users/kyvang/Documents/Capstone/data/{part_number} ({part_name})
 # Create the output directory if it doesn't exist
 os.makedirs(output_dir, exist_ok=True)
 
-# Loop through DefaultLatitude values from 0 to 90 (increasing by 10 each time)
+# Loop through DefaultLatitude/Longitude values
 count = 0
 
 if orientation == 1: 
@@ -36,20 +36,22 @@ if orientation == 1:
             f"-DefaultLatitude=90",
             f"-DefaultLongitude={i}",
             f"-SaveAlpha=True",
+            f"-AutoCrop=True",
             f"-SaveSnapshot={output_dir}/{part_number}-{count:04d}.png"
         ]
         count += 1
         # Execute the LDView command
         subprocess.run(ldview_command)
 elif orientation == 2: 
-    for i in range(0, 91, 10):
+    for i in range(0, 351, 20):
         ldview_command = [
             ldview_app_path,
             ldraw_file,
             f"-DefaultColor3={part_color}", 
-            f"-DefaultLatitude={i}",
-            f"-DefaultLongitude=180",
+            f"-DefaultLatitude=90",
+            f"-DefaultLongitude={i}",
             f"-SaveAlpha=True",
+            f"-AutoCrop=True",
             f"-SaveSnapshot={output_dir}/{part_number}-{count:04d}.png"
         ]
         count += 1
