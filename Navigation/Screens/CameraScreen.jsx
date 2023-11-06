@@ -68,8 +68,9 @@ import * as Speech from 'expo-speech';
       setLegoPrediction(null)
     };
     // lego database
-    const legos = require('../../assets/database.json')
-    
+    //const legos = require('../../assets/database.json')
+    const [legos, setLegos] = useState([]);
+
     //speech function
     const speakPrediction = () => {
       const textToSay = 'LEGO piece Predicted' + legoPrediction[0].PartName;
@@ -80,12 +81,13 @@ import * as Speech from 'expo-speech';
   //     const textToSay = 'Dismiss';
   //     Speech.speak(textToSay);
   //   };
-  
 
-
-
-
-
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
+      .then(response => response.json())
+      .then(data => setLegos(data))
+      .catch(error => console.error(error));
+  }, []);
 
 
     useEffect(() => {
@@ -185,7 +187,7 @@ import * as Speech from 'expo-speech';
   //picture capture prediction, this function grabs a tensor of every frame and sets it to the tensor state to be used for prediction if the user clicks capture
   //very ineffecient, if image can be converted to tensor then solution might be a lot faster
  
- 
+ /*
   const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
     const loop = async () => { 
       setTensorImage(images.next().value)
@@ -194,7 +196,24 @@ import * as Speech from 'expo-speech';
     }
     loop();
   }
+*/
 
+
+let frameCount = 0;
+const captureEveryNFrames = 30; // Change this to capture frames less or more frequently
+//30fps so 1 frame captured per second
+const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
+  const loop = async () => { 
+    if (frameCount % captureEveryNFrames === 0) {
+      const tensor = images.next().value;
+      const resizedTensor = tf.image.resizeBilinear(tensor, [224, 224]);
+      setTensorImage(resizedTensor);
+    }
+    frameCount++;
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
 
   //when user clicks capture image button, this function fires using the tensor state frm previous function and predicting based on that
     const handleImageCapture = async () => {
@@ -325,8 +344,8 @@ import * as Speech from 'expo-speech';
                 resizeWidth={224}
                 resizeDepth={3}
                 autorender={true}
-                cameraTextureHeight={1920}
-                cameraTextureWidth={1080}
+                cameraTextureHeight={1920} //480
+                cameraTextureWidth={1080} //270
               />,
               model?
               <Pressable
