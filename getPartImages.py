@@ -7,9 +7,9 @@ import subprocess
 import os
 
 # Define your part number and part name as variables
-part_number = "60483"
-part_name = "6265091"
-part_color = "0x333333" # black 0x333333 | red 0xff0000
+part_number = "57585"
+part_name = "4502595"
+part_color = "0x8c8c8c" # black 0x333333 | red 0xff0000 | white 0xd6d6d6 | dark grey 0x8c8c8c | tan 0xd2b48c | blue 0x2d6fcb | yellow 0xf9da4e | green 0x2fac56
 orientation = 2 # 1 for 180 (symmetrical), 2 for 360 (asymmetrical)
 
 # Path to LDView application bundle on a Mac
@@ -28,7 +28,7 @@ os.makedirs(output_dir, exist_ok=True)
 count = 0
 
 if orientation == 1: 
-    for i in range(0, 181, 10):
+    for i in range(0, 171, 10):
         ldview_command = [
             ldview_app_path,
             ldraw_file,
