@@ -6,25 +6,120 @@ import albumentations as A
 import time
 from tqdm import tqdm
 
-output_dir = 'tests_output_directory'  # Replace 'output_directory' with the directory where you want to save the image
-os.makedirs(output_dir, exist_ok=True)  # Create the output directory if it doesn't exist
+# Set the prefix for output files (can be modified)
+output_prefix = "2780 (4121715)"
+
+# Set the base directory and output subdirectories
+BASE_DIR = "piece_data"  # Set the base directory
+OUTPUT_DIR_IMAGES = os.path.join('data', output_prefix, 'images')  # Replace 'output_directory' with the directory where you want to save the image
+OUTPUT_DIR_MASKS = os.path.join('data', output_prefix, 'masks')
+OUTPUT_DIR_LABELS = os.path.join('data', output_prefix, 'labels')
+
+# Create the output directory if it doesn't exist
+os.makedirs(OUTPUT_DIR_IMAGES, exist_ok=True)
+os.makedirs(OUTPUT_DIR_MASKS, exist_ok=True)
+os.makedirs(OUTPUT_DIR_LABELS, exist_ok=True)
 
 obj_dict = {
-    1: {'folder': "2780 (4121715)", 'longest_min': 150, 'longest_max': 800},
-    2: {'folder': "3673 (4211807)", 'longest_min': 150, 'longest_max': 800},
-    3: {'folder': "3705 (370526)", 'longest_min': 150, 'longest_max': 800}
+    1: {'folder': "10928 (6012451)", 'longest_min': 150, 'longest_max': 800},
+    2: {'folder': "13670 (6031821)", 'longest_min': 150, 'longest_max': 800},
+    3: {'folder': "18575 (6346535)", 'longest_min': 150, 'longest_max': 800},
+    4: {'folder': "2780 (4121715)", 'longest_min': 150, 'longest_max': 800},
+    5: {'folder': "2815 (6028041)", 'longest_min': 150, 'longest_max': 800},
+    6: {'folder': "29219 (6173127)", 'longest_min': 150, 'longest_max': 800},
+    7: {'folder': "32009 (4495412)", 'longest_min': 150, 'longest_max': 800},
+    8: {'folder': "32009 (6271161)", 'longest_min': 150, 'longest_max': 800},
+    9: {'folder': "32013 (6284699)", 'longest_min': 150, 'longest_max': 800},
+    10: {'folder': "32014 (6268905)", 'longest_min': 150, 'longest_max': 800},
+    11: {'folder': "32034 (6271869)", 'longest_min': 150, 'longest_max': 800},
+    12: {'folder': "32054 (4140806)", 'longest_min': 150, 'longest_max': 800},
+    13: {'folder': "32062 (4142865)", 'longest_min': 150, 'longest_max': 800},
+    14: {'folder': "32072 (6284188)", 'longest_min': 150, 'longest_max': 800},
+    15: {'folder': "32073 (4211639)", 'longest_min': 150, 'longest_max': 800},
+    16: {'folder': "32123 (4239601)", 'longest_min': 150, 'longest_max': 800},
+    17: {'folder': "32140 (4141270)", 'longest_min': 150, 'longest_max': 800},
+    18: {'folder': "32184 (4121667)", 'longest_min': 150, 'longest_max': 800},
+    19: {'folder': "32270 (4177431)", 'longest_min': 150, 'longest_max': 800},
+    20: {'folder': "32271 (6276836)", 'longest_min': 150, 'longest_max': 800},
+    21: {'folder': "32278 (4542578)", 'longest_min': 150, 'longest_max': 800},
+    22: {'folder': "32291 (6280394)", 'longest_min': 150, 'longest_max': 800},
+    23: {'folder': "32316 (4211651)", 'longest_min': 150, 'longest_max': 800},
+    24: {'folder': "32348 (4509912)", 'longest_min': 150, 'longest_max': 800},
+    25: {'folder': "32348 (6278132)", 'longest_min': 150, 'longest_max': 800},
+    26: {'folder': "32449 (4142236)", 'longest_min': 150, 'longest_max': 800},
+    27: {'folder': "32498 (4177434)", 'longest_min': 150, 'longest_max': 800},
+    28: {'folder': "32523 (4142822)", 'longest_min': 150, 'longest_max': 800},
+    29: {'folder': "32523 (4153707)", 'longest_min': 150, 'longest_max': 800},
+    30: {'folder': "32523 (4153718)", 'longest_min': 150, 'longest_max': 800},
+    31: {'folder': "32523 (4509376)", 'longest_min': 150, 'longest_max': 800},
+    32: {'folder': "32523 (6007973)", 'longest_min': 150, 'longest_max': 800},
+    33: {'folder': "32524 (4495930)", 'longest_min': 150, 'longest_max': 800},
+    34: {'folder': "32525 (4611705)", 'longest_min': 150, 'longest_max': 800},
+    35: {'folder': "32526 (4211713)", 'longest_min': 150, 'longest_max': 800},
+    36: {'folder': "32526 (4585040)", 'longest_min': 150, 'longest_max': 800},
+    37: {'folder': "32556 (4514554)", 'longest_min': 150, 'longest_max': 800},
+    38: {'folder': "32905 (6185471)", 'longest_min': 150, 'longest_max': 800},
+    39: {'folder': "33299 (6313520)", 'longest_min': 150, 'longest_max': 800},
+    40: {'folder': "3649 (6195314)", 'longest_min': 150, 'longest_max': 800},
+    41: {'folder': "3673 (4211807)", 'longest_min': 150, 'longest_max': 800},
+    42: {'folder': "3705 (370526)", 'longest_min': 150, 'longest_max': 800},
+    43: {'folder': "3706 (370626)", 'longest_min': 150, 'longest_max': 800},
+    44: {'folder': "3707 (370726)", 'longest_min': 150, 'longest_max': 800},
+    45: {'folder': "3708 (370826)", 'longest_min': 150, 'longest_max': 800},
+    46: {'folder': "3737 (373726)", 'longest_min': 150, 'longest_max': 800},
+    47: {'folder': "40490 (4211866)", 'longest_min': 150, 'longest_max': 800},
+    48: {'folder': "41239 (4522934)", 'longest_min': 150, 'longest_max': 800},
+    49: {'folder': "41669 (6288218)", 'longest_min': 150, 'longest_max': 800},
+    50: {'folder': "41678 (4162857)", 'longest_min': 150, 'longest_max': 800},
+    51: {'folder': "4185 (4587275)", 'longest_min': 150, 'longest_max': 800},
+    52: {'folder': "41897 (6035364)", 'longest_min': 150, 'longest_max': 800},
+    53: {'folder': "42003 (6273715)", 'longest_min': 150, 'longest_max': 800},
+    54: {'folder': "44294 (4211805)", 'longest_min': 150, 'longest_max': 800},
+    55: {'folder': "44809 (6008527)", 'longest_min': 150, 'longest_max': 800},
+    56: {'folder': "44874 (6321303)", 'longest_min': 150, 'longest_max': 800},
+    57: {'folder': "4519 (4211815)", 'longest_min': 150, 'longest_max': 800},
+    58: {'folder': "45590 (4198367)", 'longest_min': 150, 'longest_max': 800},
+    59: {'folder': "4716 (4211510)", 'longest_min': 150, 'longest_max': 800},
+    60: {'folder': "48989 (4225033)", 'longest_min': 150, 'longest_max': 800},
+    61: {'folder': "49130 (6313453)", 'longest_min': 150, 'longest_max': 800},
+    62: {'folder': "55013 (4499858)", 'longest_min': 150, 'longest_max': 800},
+    63: {'folder': "56908 (4634091)", 'longest_min': 150, 'longest_max': 800},
+    64: {'folder': "57518 (6325504)", 'longest_min': 150, 'longest_max': 800},
+    65: {'folder': "57519 (4582792)", 'longest_min': 150, 'longest_max': 800},
+    66: {'folder': "57585 (4502595)", 'longest_min': 150, 'longest_max': 800},
+    67: {'folder': "59443 (4513174)", 'longest_min': 150, 'longest_max': 800},
+    68: {'folder': "60483 (6265091)", 'longest_min': 150, 'longest_max': 800},
+    69: {'folder': "60484 (4552347)", 'longest_min': 150, 'longest_max': 800},
+    70: {'folder': "60485 (4535768)", 'longest_min': 150, 'longest_max': 800},
+    71: {'folder': "63869 (6331441)", 'longest_min': 150, 'longest_max': 800},
+    72: {'folder': "64178 (4540797)", 'longest_min': 150, 'longest_max': 800},
+    73: {'folder': "64179 (4539880)", 'longest_min': 150, 'longest_max': 800},
+    74: {'folder': "64392 (4541326)", 'longest_min': 150, 'longest_max': 800},
+    75: {'folder': "64682 (4543490)", 'longest_min': 150, 'longest_max': 800},
+    76: {'folder': "6536 (6261375)", 'longest_min': 150, 'longest_max': 800},
+    77: {'folder': "6558 (4514553)", 'longest_min': 150, 'longest_max': 800},
+    78: {'folder': "6562 (4666579)", 'longest_min': 150, 'longest_max': 800},
+    79: {'folder': "6589 (4565452)", 'longest_min': 150, 'longest_max': 800},
+    80: {'folder': "6590 (6275844)", 'longest_min': 150, 'longest_max': 800},
+    81: {'folder': "6629 (6279881)", 'longest_min': 150, 'longest_max': 800},
+    82: {'folder': "87080 (4566251)", 'longest_min': 150, 'longest_max': 800},
+    83: {'folder': "87083 (6083620)", 'longest_min': 150, 'longest_max': 800},
+    84: {'folder': "87086 (4566249)", 'longest_min': 150, 'longest_max': 800},
+    85: {'folder': "92911 (6296844)", 'longest_min': 150, 'longest_max': 800},
+    86: {'folder': "94925 (4640536)", 'longest_min': 150, 'longest_max': 800},
+    87: {'folder': "99009 (4652235)", 'longest_min': 150, 'longest_max': 800},
+    88: {'folder': "99010 (6326620)", 'longest_min': 150, 'longest_max': 800},
+    89: {'folder': "99773 (6009019)", 'longest_min': 150, 'longest_max': 800},
+    90: {'folder': "99948 (6114171)", 'longest_min': 150, 'longest_max': 800}
 }
 
-PATH_MAIN = "data"
-
+PATH_MAIN = "piece_data"
 
 def get_img_and_mask(img_path, mask_path):
 
     img = cv2.imread(img_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
     mask = cv2.imread(mask_path)
-    mask = cv2.cvtColor(mask, cv2.COLOR_BGR2RGB)
     
     mask_b = mask[:,:,0] == 0 # This is boolean mask
     mask = mask_b.astype(np.uint8) # This is binary mask
@@ -107,26 +202,27 @@ transforms_bg_obj = A.Compose([
 
 transforms_obj = A.Compose([
     A.RandomRotate90(p=1),
-    A.RandomBrightnessContrast(brightness_limit=(-0.1, 0.2),
+    A.RandomBrightnessContrast(brightness_limit=(0.0, 0.0),
                                contrast_limit=0.1,
                                brightness_by_max=True,
                                always_apply=False,
                                p=1)
+
 ])
 
 def add_obj(img_comp, mask_comp, img, mask, x, y, idx):
     h_comp, w_comp = img_comp.shape[0], img_comp.shape[1]
     h, w = img.shape[0], img.shape[1]
 
-    x = x - int(w / 2)
-    y = y - int(h / 2)
-    
+    x = max(0, x - int(w / 2))  # Ensure x is not negative
+    y = max(0, y - int(h / 2))  # Ensure y is not negative
+
     mask_b = mask == 1
     mask_rgb_b = np.stack([mask_b, mask_b, mask_b], axis=2)
 
     mask_added = None  # Default assignment
 
-    if x >= 0 and y >= 0:
+    if x < w_comp and y < h_comp:  # Check if the starting point is within the image boundaries
         h_part = min(h, h_comp - y)  # Corrected calculation for h_part
         w_part = min(w, w_comp - x)  # Corrected calculation for w_part
 
@@ -196,9 +292,14 @@ def create_composition(img_comp_bg,
     
     obj_areas = []
     labels_comp = []
-    num_objs = np.random.randint(max_objs) + 2
+    
+    # Set the number of objects to 5 CHANGE FOR YOUR PURPOSE
+    num_objs = 6
     
     i = 1
+    
+    # Generate a single random ratio for all objects
+    ratio = np.random.uniform(0.5, 1.5)
     
     for _ in range(1, num_objs):
 
@@ -213,8 +314,11 @@ def create_composition(img_comp_bg,
             img, mask = get_img_and_mask(img_path, mask_path)
 
             x, y = np.random.randint(w), np.random.randint(h)
-            longest_min = obj_dict[obj_idx]['longest_min']
-            longest_max = obj_dict[obj_idx]['longest_max']
+            
+            # Resize all objects using the same randomly generated ratio
+            longest_min = int(obj_dict[obj_idx]['longest_min'] * ratio)
+            longest_max = int(obj_dict[obj_idx]['longest_max'] * ratio)
+            
             img, mask = resize_transform_obj(img,
                                              mask,
                                              longest_min,
@@ -252,6 +356,7 @@ def create_composition(img_comp_bg,
                     img_comp, mask_comp = img_comp_prev.copy(), mask_comp_prev.copy()        
         
     return img_comp, mask_comp, labels_comp, obj_areas
+
 
 
 def create_yolo_annotations(mask_comp, labels_comp):
@@ -319,45 +424,59 @@ files_bg_noise_masks = [os.path.join(PATH_MAIN, "bg_noise", "masks", f) for f in
 #print("\nThe first five files from the sorted list of background noise images:", files_bg_noise_imgs[:5])
 #print("\nThe first five files from the sorted list of background noise masks:", files_bg_noise_masks[:5])
 
-img_comp_bg = create_bg_with_noise(files_bg_imgs,
-                                   files_bg_noise_imgs,
-                                   files_bg_noise_masks,
-                                   max_objs_to_add=20)
+# Number of iterations
+num_iterations = 5
 
-img_comp, mask_comp, labels_comp, obj_areas = create_composition(img_comp_bg,
-                                                                 max_objs=15,
-                                                                 overlap_degree=0.2,
-                                                                 max_attempts_per_obj=10)
+# Loop for 5 iterations
+for iteration_number in range(1, num_iterations):
+    # Create composition
+    img_comp_bg = create_bg_with_noise(files_bg_imgs,
+                                       files_bg_noise_imgs,
+                                       files_bg_noise_masks,
+                                       max_objs_to_add=20)
 
-# Save the composite image to the tests_output_directory
-output_image_path = os.path.join(output_dir, 'composite_image5.png')
-output_mask_path = os.path.join(output_dir, 'composite_mask5.png')
+    img_comp, mask_comp, labels_comp, obj_areas = create_composition(img_comp_bg,
+                                                                     max_objs=15,
+                                                                     overlap_degree=0.2,
+                                                                     max_attempts_per_obj=10)
 
-colors = {1: (255,0,0), 2: (0,255,0), 3: (0,0,255)}
+    # Get the index of the object specified by "output_prefix"
+    output_obj_idx = None
+    for idx, obj_info in obj_dict.items():
+        if obj_info['folder'] == output_prefix:
+            output_obj_idx = idx
+            break
 
-img_comp_bboxes = img_comp.copy()
+    if output_obj_idx is not None:
+        # Ensure the specified object is placed after the first 5 random objects
+        output_obj_path = obj_dict[output_obj_idx]['images'][0]
+        output_mask_path = obj_dict[output_obj_idx]['masks'][0]
+        output_img, output_mask = get_img_and_mask(output_obj_path, output_mask_path)
+        x, y = np.random.randint(img_comp.shape[1]), np.random.randint(img_comp.shape[0])
+        output_img, output_mask = resize_transform_obj(output_img, output_mask, 150, 800, transforms=transforms_obj)
+        img_comp, mask_comp, _ = add_obj(img_comp, mask_comp, output_img, output_mask, x, y, 6)
 
-obj_ids = np.unique(mask_comp).astype(np.uint8)[1:]
-masks = mask_comp == obj_ids[:, None, None]
+        # Update output paths with the determined iteration number
+        output_image_path = os.path.join(OUTPUT_DIR_IMAGES, f'{output_prefix}_{iteration_number:04d}.png')
+        output_mask_path = os.path.join(OUTPUT_DIR_MASKS, f'{output_prefix}_{iteration_number:04d}_mask.png')
+        output_labels_path = os.path.join(OUTPUT_DIR_LABELS, f'{output_prefix}_{iteration_number:04d}.txt')
 
-for i in range(len(obj_ids)):
-    pos = np.where(masks[i])
-    xmin = np.min(pos[1])
-    xmax = np.max(pos[1])
-    ymin = np.min(pos[0])
-    ymax = np.max(pos[0])
-    img_comp_bboxes = cv2.rectangle(img_comp_bboxes,
-                                    (xmin, ymin),
-                                    (xmax,ymax),
-                                    colors[labels_comp[i]],
-                                    6)
+        # Save images and annotations
+        cv2.imwrite(output_image_path, img_comp)
+        cv2.imwrite(output_mask_path, mask_comp * 255)
 
-cv2.imwrite(output_image_path, cv2.cvtColor(img_comp_bboxes, cv2.COLOR_RGB2BGR))
-cv2.imwrite(output_mask_path, mask_comp * 255)
+        # Include the information about the output object in the labels_comp list
+        labels_comp.append(output_obj_idx)
+        obj_areas.append(np.count_nonzero(output_mask))
 
-annotations_yolo = create_yolo_annotations(mask_comp, labels_comp)
-for i in range(len(annotations_yolo)):
-    print(' '.join(str(el) for el in annotations_yolo[i]))
+        # Create YOLO annotations and save to a text file
+        annotations_yolo = create_yolo_annotations(mask_comp, labels_comp)
+        with open(output_labels_path, 'w') as f:
+            for annotation in annotations_yolo:
+                f.write(' '.join(str(el) for el in annotation) + '\n')
 
-print(f"Composite image saved at {output_image_path}")
-print(f"Composite mask saved at {output_mask_path}")
+        print(f"Composite image saved at {output_image_path}")
+        print(f"Composite mask saved at {output_mask_path}")
+        print(f"YOLO annotations saved at {output_labels_path}")
+    else:
+        print(f"Object with output_prefix '{output_prefix}' not found in obj_dict.")
