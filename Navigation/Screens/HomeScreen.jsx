@@ -81,7 +81,7 @@ function HomeScreen({navigation}){
       
       {results.map(item => (
           <ListItem key = {item.PartID} onPress={() => navigation.navigate('Lego',{ item:item})} containerStyle={{backgroundColor: theme.theme == "dark" ? "#000000" : theme.background}} bottomDivider>
-          <Avatar size={70} source={{ uri: item.ImageURL }} />
+          <Avatar size={70} source={{ uri: item.ImageURL }} /> 
           <ListItem.Content>
             <ListItem.Title style={{color: theme.color}}>{item.PartName}</ListItem.Title>
             <ListItem.Subtitle style={{color: theme.color}}>{'Category: ' + item.Category}</ListItem.Subtitle>

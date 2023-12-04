@@ -1,6 +1,7 @@
 import { StyleSheet,Modal, Text, View, ScrollView,Image, Pressable, Touchable, TouchableOpacity } from 'react-native';
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Divider} from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 // for theming page: react useContext and below
@@ -55,9 +56,18 @@ function LegoPartScreen({ route, navigation}){
             Speech.speak(textToSay);
         }
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            return () => {
+                console.log(partId);
+            };
+        }, [partId])
+    );
+
     //page html
     return(
-
+        
         <View style={{...styles.container, backgroundColor: theme.theme == "dark" ? "#000000" : theme.background}}>
             {/* modal not present until photo is clicked */}
             <Modal 
