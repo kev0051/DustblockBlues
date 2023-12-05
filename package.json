@@ -56,7 +56,8 @@
     "react-native-torch": "^1.2.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.19.6",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "rooks": "^7.14.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

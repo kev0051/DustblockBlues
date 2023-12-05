@@ -1,13 +1,18 @@
 import { StyleSheet,Modal, Text, View, ScrollView,Image, Pressable, Touchable, TouchableOpacity } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Divider} from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
 // import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 // for theming page: react useContext and below
 import themeContext from '../../config/themeContext';
 import * as Speech from 'expo-speech';
 import ttsContext from '../../config/ttsContext';
+
+// for history
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useStackState } from "rooks";
+
 function LegoPartScreen({ route, navigation}){
     //params passed from homepage
     const partId = route.params.item.PartID;
@@ -56,11 +61,47 @@ function LegoPartScreen({ route, navigation}){
             Speech.speak(textToSay);
         }
     };
+    
+    const numberToPushRef = useRef(0);
+    const[
+        list, 
+        { push, pop, peek, length },
+        listInReverse,
+    ] = useStackState([]);
+
+    function addToStack(){
+        push(partId);
+    }
+
+    const getData = async () => {
+        try {
+            const value = await AsyncStorage.getItem("LegoHistory");
+            if( value != null){
+                return JSON.parse(value);
+            }
+            return null;
+        }
+        catch (e){
+            console.log('Error reading file: ', e);
+        }
+    };
+    const storeData = async (value) => {
+        try {
+            await AsyncStorage.setItem("LegoHistory", JSON.stringify(value));
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     useFocusEffect(
         React.useCallback(() => {
+            listInReverse.map((item) => {
+                console.log(item);
+            }
+            );
             return () => {
-                console.log(partId);
+                addToStack();
+                console.log(partId)
             };
         }, [partId])
     );
