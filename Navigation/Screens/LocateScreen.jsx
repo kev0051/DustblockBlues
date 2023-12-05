@@ -83,7 +83,7 @@ import { useFocusEffect } from '@react-navigation/native';
                 method: "POST",
                 url: "https://detect.roboflow.com/lego-detection-fsxai/8",
                 params: {
-                    api_key: "uOLEkn7ugJbDKQy6Gu0k"
+                    api_key: "O6l7hNk0vu6OfoC85nD8"
                 },
                 data: image.base64,
                 headers: {
