@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback, Pressable
 import { StatusBar } from 'expo-status-bar';
 import { SearchBar, ListItem, Avatar } from "@rneui/themed";
 import { Divider } from "@react-native-material/core";
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import InformationModal from '../../components/Information';
 import SettingsModal from '../../components/SettingsPop';
 // for theming page: react useContext and below
@@ -14,12 +14,19 @@ import Feather from 'react-native-vector-icons/Feather'; // Icon from https://gi
 function HomeScreen({navigation}){
   // theme
   const theme = useContext(themeContext);
-
- //array to hold json lego db
-  const legos = require('../../assets/database.json')
+  const [legos, setLegos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  //array to hold json lego db
+  //const legos = require('../../assets/database.json')
   //search term that is typed in the search bar
-  const [searchTerm, setSearchTerm] = useState("")
+  //const [searchTerm, setSearchTerm] = useState("")
 
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
+      .then(response => response.json())
+      .then(data => setLegos(data))
+      .catch(error => console.error(error));
+  }, []);
   //updates searching if letters are typed in the search bar
   const updateSearch = (searchTerm) => {
     setSearchTerm(searchTerm)

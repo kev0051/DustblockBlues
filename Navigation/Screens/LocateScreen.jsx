@@ -151,8 +151,15 @@ import { useFocusEffect } from '@react-navigation/native';
     const [partLocation, setPartLocation] = useState(false)
     
   
-    const legos = require('../../assets/database.json')
-    
+    //const legos = require('../../assets/database.json')
+    const [legos, setLegos] = useState([]);
+
+  useEffect(() => {
+    fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
+      .then(response => response.json())
+      .then(data => setLegos(data))
+      .catch(error => console.error(error));
+  }, []);
     //speech function
     const speakPrediction = () => {
       const textToSay = 'LEGO piece Predicted' + legoPrediction[0].PartName;
