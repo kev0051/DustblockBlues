@@ -94,7 +94,7 @@ import * as Speech from 'expo-speech';
   }, []);
 */
 useEffect(() => {
-  fetch('https://3b2e-47-184-111-152.ngrok-free.app/api/legos')
+  fetch('https://api.npoint.io/f7689e80de563c693342')
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
