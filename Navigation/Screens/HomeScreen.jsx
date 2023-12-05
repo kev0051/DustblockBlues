@@ -29,7 +29,7 @@ function HomeScreen({navigation}){
   }, []);
   */
   useEffect(() => {
-    fetch('https://api.npoint.io/f7689e80de563c693342')
+    fetch('https://3b2e-47-184-111-152.ngrok-free.app/api/legos')
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
