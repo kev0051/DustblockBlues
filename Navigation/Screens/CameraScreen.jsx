@@ -85,25 +85,14 @@ import * as Speech from 'expo-speech';
   //     const textToSay = 'Dismiss';
   //     Speech.speak(textToSay);
   //   };
-/*
+
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
       .then(response => response.json())
       .then(data => setLegos(data))
       .catch(error => console.error(error));
   }, []);
-*/
-useEffect(() => {
-  fetch('http://192.168.254.134:5000/api/legos')
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  })
-    .then(data => setLegos(data))
-    .catch(error => console.error(error));
-}, []);
+
 
     useEffect(() => {
         (async () => {
