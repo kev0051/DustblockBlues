@@ -164,7 +164,7 @@ import { useFocusEffect } from '@react-navigation/native';
   */
 
   useEffect(() => {
-    fetch('http://192.168.254.134:5000/api/legos')
+    fetch('https://3b2e-47-184-111-152.ngrok-free.app/api/legos')
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
