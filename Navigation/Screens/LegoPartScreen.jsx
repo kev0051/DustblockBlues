@@ -80,10 +80,14 @@ function LegoPartScreen({ route, navigation}){
     useFocusEffect(
         React.useCallback(() => {
             readInArray();
-            console.log(value);
-            array.reverse;
+            let results = value.split(" ");
+            controls.clear();
+            results.forEach(item =>{
+                controls.push(item);
+            });
+            array.reverse();
             console.log(array); // displays each partID in the reverse order they entered
-            array.reverse;
+            array.reverse();
             return () => {
                 // function for removing an already existent partId in the history
                 let arrayLoc = 0;
