@@ -10,8 +10,8 @@ import ttsContext from '../../config/ttsContext';
 
 // for history
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useStackState } from "rooks";
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import { useArrayState } from "rooks";
 
 function LegoPartScreen({ route, navigation}){
     //params passed from homepage
@@ -26,6 +26,9 @@ function LegoPartScreen({ route, navigation}){
    
     //variable to toggle full screen image
     const [showModal, setShowModal] = useState(false)
+
+    const [value, setValue] = useState('value');
+    const { getItem, setItem } = useAsyncStorage('LegoHistory')
 
     // theme
     const theme = useContext(themeContext);
@@ -62,46 +65,38 @@ function LegoPartScreen({ route, navigation}){
         }
     };
     
-    const numberToPushRef = useRef(0);
-    const[
-        list, 
-        { push, pop, peek, length },
-        listInReverse,
-    ] = useStackState([]);
+    const [array, controls] = useArrayState([]);
 
-    function addToStack(){
-        push(partId);
-    }
-
-    const getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem("LegoHistory");
-            if( value != null){
-                return JSON.parse(value);
-            }
-            return null;
-        }
-        catch (e){
-            console.log('Error reading file: ', e);
-        }
-    };
-    const storeData = async (value) => {
-        try {
-            await AsyncStorage.setItem("LegoHistory", JSON.stringify(value));
-        } catch (e) {
-            console.log(e);
-        }
+    const readInArray = async () => {
+        const item = await getItem();
+        setValue(item);
     };
 
+    const writeArray = async (newValue) => {
+        await setItem(newValue);
+        setValue(newValue);
+    };
+    
     useFocusEffect(
         React.useCallback(() => {
-            listInReverse.map((item) => {
-                console.log(item);
-            }
-            );
+            readInArray();
+            console.log(value);
+            array.reverse;
+            console.log(array); // displays each partID in the reverse order they entered
+            array.reverse;
             return () => {
-                addToStack();
+                // function for removing an already existent partId in the history
+                let arrayLoc = 0;
+                array.map((item) => {
+                    if(item == partId){
+                        controls.removeItemAtIndex(arrayLoc);
+                    }
+                    arrayLoc += 1;
+                } 
+                );
+                controls.push(partId) // then push that partId onto the array
                 console.log(partId)
+                writeArray(JSON.stringify(array));
             };
         }, [partId])
     );
