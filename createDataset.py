@@ -11,9 +11,9 @@ output_prefix = "2815 (6028041)"
 
 # Set the base directory and output subdirectories 
 BASE_DIR = "piece_data"  # Set the base directory
-OUTPUT_DIR_IMAGES = os.path.join('data', 'test', 'images')  # Replace 'output_directory' with the directory where you want to save the image
-OUTPUT_DIR_MASKS = os.path.join('data', 'test', 'masks')
-OUTPUT_DIR_LABELS = os.path.join('data', 'test', 'labels')
+OUTPUT_DIR_IMAGES = os.path.join('data', 'images', 'test')  # Replace 'output_directory' with the directory where you want to save the image
+OUTPUT_DIR_MASKS = os.path.join('data', 'masks', 'test')
+OUTPUT_DIR_LABELS = os.path.join('data', 'labels', 'test')
 
 # Create the output directory if it doesn't exist
 os.makedirs(OUTPUT_DIR_IMAGES, exist_ok=True)
