@@ -81,13 +81,18 @@ function LegoPartScreen({ route, navigation}){
         React.useCallback(() => {
             readInArray();
             let results = value.split(" ");
+            
             controls.clear();
             results.forEach(item =>{
+                //console.log(item); // displays the items retrieved from storage
+                item = item.replace(/\[/g, "");
+                item = item.replace(/\]/g, "");
+                item = item.replace(/\"/g, "");
                 controls.push(item);
             });
-            array.reverse();
+            /*array.reverse();
             console.log(array); // displays each partID in the reverse order they entered
-            array.reverse();
+            array.reverse();*/
             return () => {
                 // function for removing an already existent partId in the history
                 let arrayLoc = 0;
@@ -99,7 +104,7 @@ function LegoPartScreen({ route, navigation}){
                 } 
                 );
                 controls.push(partId) // then push that partId onto the array
-                console.log(partId)
+                //console.log(partId)
                 writeArray(JSON.stringify(array));
             };
         }, [partId])
