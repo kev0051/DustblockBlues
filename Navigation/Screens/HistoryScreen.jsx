@@ -11,7 +11,7 @@ import Feather from 'react-native-vector-icons/Feather'; // Icon from https://gi
 
 
 
-function HomeScreen({navigation}){
+function HistoryScreen({navigation}){
   // theme
   const theme = useContext(themeContext);
   const [legos, setLegos] = useState([]);
