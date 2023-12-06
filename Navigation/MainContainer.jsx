@@ -14,20 +14,22 @@ import ttsContext from "../config/ttsContext";
 import tts from '../config/tts';
 
 //Screens
-import HomeScreen from './Screens/HomeScreen'
-import CameraScreen from './Screens/CameraScreen'
-import LocateScreen from './Screens/LocateScreen'
-import SettingsScreen from './Screens/SettingsScreen'
+import HomeScreen from './Screens/HomeScreen';
+import HistoryScreen from './Screens/HistoryScreen';
+import CameraScreen from './Screens/CameraScreen';
+import LocateScreen from './Screens/LocateScreen';
+import SettingsScreen from './Screens/SettingsScreen';
 import LegoPartScreen from './Screens/LegoPartScreen';
 import { useState, useContext } from 'react';
 import { useEffect } from 'react';
 
 //Screen Names
-const homeName = "Home"
-const locateName = "Locate"
+const homeName = "Home";
+const locateName = "Locate";
 const cameraName = "Camera";
 const settingsName = "Settings";
-const legoPartsName = "Lego"
+const legoPartsName = "Lego";
+const historyName = "History";
 
 const Tab = createBottomTabNavigator();
 
