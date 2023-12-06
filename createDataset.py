@@ -7,13 +7,13 @@ import time
 from tqdm import tqdm
 
 # Set the prefix for output files (can be modified)
-output_prefix = "2780 (4121715)"
+output_prefix = "2815 (6028041)"
 
-# Set the base directory and output subdirectories
+# Set the base directory and output subdirectories 
 BASE_DIR = "piece_data"  # Set the base directory
-OUTPUT_DIR_IMAGES = os.path.join('data', output_prefix, 'images')  # Replace 'output_directory' with the directory where you want to save the image
-OUTPUT_DIR_MASKS = os.path.join('data', output_prefix, 'masks')
-OUTPUT_DIR_LABELS = os.path.join('data', output_prefix, 'labels')
+OUTPUT_DIR_IMAGES = os.path.join('data', 'test', 'images')  # Replace 'output_directory' with the directory where you want to save the image
+OUTPUT_DIR_MASKS = os.path.join('data', 'test', 'masks')
+OUTPUT_DIR_LABELS = os.path.join('data', 'test', 'labels')
 
 # Create the output directory if it doesn't exist
 os.makedirs(OUTPUT_DIR_IMAGES, exist_ok=True)
@@ -424,11 +424,14 @@ files_bg_noise_masks = [os.path.join(PATH_MAIN, "bg_noise", "masks", f) for f in
 #print("\nThe first five files from the sorted list of background noise images:", files_bg_noise_imgs[:5])
 #print("\nThe first five files from the sorted list of background noise masks:", files_bg_noise_masks[:5])
 
-# Number of iterations
-num_iterations = 5
+# Number of iterations (scenes created) 
+num_iterations = 50
+
+# Choose the starting value for iteration_number
+start_iteration = 951
 
 # Loop for 5 iterations
-for iteration_number in range(1, num_iterations):
+for iteration_number in range(start_iteration, start_iteration + num_iterations):
     # Create composition
     img_comp_bg = create_bg_with_noise(files_bg_imgs,
                                        files_bg_noise_imgs,
