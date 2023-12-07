@@ -72,8 +72,14 @@ function LegoPartScreen({ route, navigation}){
                 // fuction to update history
                 AsyncStorage.getItem('LegoHistory').then(
                     response => {
-                        if(response != null | undefined ){ // if there is already history on the device
-                            let results = response.split(" ");
+                        if(response === null){ // if there is no history on the device
+                            let output = partId;
+                            //console.log(output);
+                            storeData(output);
+                            
+                        }
+                        else{ // if there is history on the device
+                        let results = response.split(" ");
                             let output = partId; // first term as part Id
                             results.forEach(item =>{
                                 if(item != partId){
@@ -82,12 +88,6 @@ function LegoPartScreen({ route, navigation}){
                             });
                             //console.log(output);
                             storeData(output);
-                            //AsyncStorage.clear(); // clears all stored values
-                    }
-                    else if(response == null){ // if there is no history on the device
-                        let output = partId;
-                        //console.log(output);
-                        storeData(output);
                     }
                 }
                 );

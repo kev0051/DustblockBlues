@@ -56,7 +56,7 @@ function SettingsModal() {
             
             <Text style={ {...styles.text, color: theme.color,marginTop:-20}}>Dark Mode</Text>
             </View>
-            <Text style={ {...styles.text, color: theme.color, marginLeft:100}}onPress={ResetHist}>Reset History</Text>
+            <Button style={ {...styles.text, color: theme.color, marginLeft:20}}onPress={ResetHist} title="Reset History"/>
             <View style={{flexDirection:'row', alignItems:'center',marginLeft:30,marginTop:10}}>
             </View>
 
