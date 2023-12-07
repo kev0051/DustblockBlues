@@ -85,7 +85,7 @@ function LegoPartScreen({ route, navigation}){
                             //AsyncStorage.clear(); // clears all stored values
                     }
                     else if(response == null){ // if there is no history on the device
-                        let output = partId.concat(" ");
+                        let output = partId;
                         //console.log(output);
                         storeData(output);
                     }

@@ -12,40 +12,39 @@ import Feather from 'react-native-vector-icons/Feather'; // Icon from https://gi
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function HistoryScreen({navigation}){
+function HistoryScreen({route, navigation}){
   // theme
   const theme = useContext(themeContext);
-  const [legos, setLegos] = useState([]);
-  const [history, setHistory] = useState([]);
+  const legos = route.params.item;
   const [results, setResults] = useState([]);
+  const [history, setHistory] = useState([]);
+
+  // set up results
+  useEffect(() => {
+    if(history.length > 0){
+      var partIDs = history.split(' ');
+      var sortedLegoHist = partIDs.map(x => legos.find(item => item.PartID === x));
+      setResults(sortedLegoHist);
+    }
+    else{
+      setResults([]);
+    }
+  }, [history]);
 
   useFocusEffect(
-    React.useCallback(() => {
-        AsyncStorage.getItem('LegoDB').then( response => {
-          if(response != null | undefined) {
-            setLegos(JSON.parse(response))
-        AsyncStorage.getItem('LegoHistory').then(
-            response => {
-                if(response != null | undefined ){ // if there is already history on the device
-                    setHistory(response);
-                    var partIDs = history.split(" ");
-                    var sortedLegoHist = partIDs.map(x => legos.find(item => item.PartID === x)); 
-                    setResults(sortedLegoHist);
-                    //AsyncStorage.clear(); // clears all stored values
-            }
-            else if(response == null){ // if there is no history on the device
-                setResults([]);
-                setHistory([]);
-            }
-        });
-      }
-      else{
-        // error getting the database
-      }
-        return() => {
-
-        };
+  React.useCallback(() => {
+      AsyncStorage.getItem('LegoHistory').then(
+          response => {
+              if(response === null){ // if there is no history on the device
+                  setHistory([]);
+          }
+          else{ // if there is history on the device
+              setHistory(response);
+          }
       });
+      return() => {
+
+      };
     }, [legos, history])
 );
 

@@ -69,6 +69,7 @@ export default function MainContainer(){
             tabBarButton: [
               legoPartsName,
               settingsName,
+              historyName,
             ].includes(route.name)
               ? () => {
                   return null;
@@ -118,26 +119,16 @@ export default function MainContainer(){
                     </View>
                 )
               }
-              else if (rn === historyName) { 
-                outlined = focused ? '#ff0000' : '#808080';
-                return(
-                  <View>
-                        {/*<> Add icon here </>*/}
-                        <Text style ={{color:outlined, fontSize:20,position:'relative',left:-5,bottom:-3,textAlign:'center'}}>History</Text>
-                  </View>
-                )
-
-              }
             },
           })}>
           
 
           <Tab.Screen options={{ headerShown: false}}name={homeName} component={HomeScreen} />
-          <Tab.Screen options={{ headerShown: false}}name={historyName} component={HistoryScreen} />
           <Tab.Screen options={{headerShown: false, unmountOnBlur: true,}} name={cameraName} component={CameraScreen} />
           <Tab.Screen options={{headerShown: false, unmountOnBlur: true,}} name={locateName} component={LocateScreen} />
           <Tab.Screen options={{headerShown: false}} name={settingsName} component={SettingsScreen} />
           <Tab.Screen options={{ headerShown: false}} name={legoPartsName} component={LegoPartScreen} />
+          <Tab.Screen options={{ headerShown: false}} name={historyName} component={HistoryScreen} />
 
         </Tab.Navigator>
       </NavigationContainer>

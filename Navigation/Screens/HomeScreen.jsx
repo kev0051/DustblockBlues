@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback, Pressable } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback, Pressable, Button } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SearchBar, ListItem, Avatar } from "@rneui/themed";
 import { Divider } from "@react-native-material/core";
@@ -79,7 +79,11 @@ function HomeScreen({navigation}){
      
       <ScrollView style={{position:'relative', marginBottom:90, backgroundColor: theme.background}}>
 
-      <Text style={{...styles.text, left:20,fontWeight:'bold', fontSize:30, color: theme.color}}>Lego Pieces</Text>
+      <Text style={{...styles.text, left:20,fontWeight:'bold', fontSize:30, color: theme.color}}>Lego Pieces 
+      <View style={{...styles.text, right:30}}>
+      <Button onPress={() => navigation.navigate('History',{item:legos})} title="View History"/>
+      </View>
+      </Text>
       <Text style={{...styles.text, color: theme.color}}>Please select the piece you would like to identify</Text>
       <SearchBar onChangeText={updateSearch} value={searchTerm} placeholder="Search" platform="ios" containerStyle={{position:'relative',margin:16, backgroundColor: theme.background}}/>
       <Divider style={{ marginTop: 10,marginLeft:20,marginRight:20,}}/>
