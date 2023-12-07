@@ -6,6 +6,8 @@ import { Switch } from "@react-native-material/core";
 import { EventRegister } from 'react-native-event-listeners';
 import themeContext from "../../config/themeContext";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import ttsContext from "../../config/ttsContext";
 /* Function SettingsScreen
    Purpose: Displays Settings
@@ -17,9 +19,13 @@ import ttsContext from "../../config/ttsContext";
 function SettingsScreen({navigation}){
     const theme = useContext(themeContext);
     const [themeMode, setThemeMode] = useState(false);
-
+    
     const ttsChoice = useContext(ttsContext);
     const [ttsMode, setTtsMode] = useState(false);
+
+    const ResetHist = async () => {
+      await AsyncStorage.clear('LegoHistory');
+    }
 
     return(
         <View style={[styles.container, {backgroundColor: theme.background}]}>
@@ -41,6 +47,7 @@ function SettingsScreen({navigation}){
             
             <Text style={ {...styles.text, color: theme.color}}>Dark Mode</Text>
             </View>
+            <Text style={ {...styles.text, color: theme.color}}onPress={ResetHist}>Reset History</Text>
             <View style={{flexDirection:'row', alignItems:'center',marginLeft:30,marginTop:10}}>
             </View>
 

@@ -8,6 +8,7 @@ import SettingsModal from '../../components/SettingsPop';
 // for theming page: react useContext and below
 import themeContext from '../../config/themeContext';
 import Feather from 'react-native-vector-icons/Feather'; // Icon from https://github.com/oblador/react-native-vector-icons
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -36,7 +37,12 @@ function HomeScreen({navigation}){
       }
       return response.json();
     })
-      .then(data => setLegos(data))
+      .then(
+        data => { setLegos(data);
+          AsyncStorage.setItem('LegoDB', JSON.stringify(data));
+        }
+      
+      )
       .catch(error => console.error(error));
   }, []);
   //updates searching if letters are typed in the search bar

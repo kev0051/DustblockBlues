@@ -10,8 +10,7 @@ import ttsContext from '../../config/ttsContext';
 
 // for history
 import { useFocusEffect } from '@react-navigation/native';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-import { useArrayState } from "rooks";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function LegoPartScreen({ route, navigation}){
     //params passed from homepage
@@ -26,9 +25,6 @@ function LegoPartScreen({ route, navigation}){
    
     //variable to toggle full screen image
     const [showModal, setShowModal] = useState(false)
-
-    const [value, setValue] = useState('value');
-    const { getItem, setItem } = useAsyncStorage('LegoHistory')
 
     // theme
     const theme = useContext(themeContext);
@@ -65,47 +61,36 @@ function LegoPartScreen({ route, navigation}){
         }
     };
     
-    const [array, controls] = useArrayState([]);
 
-    const readInArray = async () => {
-        const item = await getItem();
-        setValue(item);
-    };
-
-    const writeArray = async (newValue) => {
-        await setItem(newValue);
-        setValue(newValue);
+    storeData = async (newValue) => {
+        await AsyncStorage.setItem('LegoHistory', newValue);
     };
     
     useFocusEffect(
         React.useCallback(() => {
-            readInArray();
-            let results = value.split(" ");
-            
-            controls.clear();
-            results.forEach(item =>{
-                //console.log(item); // displays the items retrieved from storage
-                item = item.replace(/\[/g, "");
-                item = item.replace(/\]/g, "");
-                item = item.replace(/\"/g, "");
-                controls.push(item);
-            });
-            /*array.reverse();
-            console.log(array); // displays each partID in the reverse order they entered
-            array.reverse();*/
             return () => {
-                // function for removing an already existent partId in the history
-                let arrayLoc = 0;
-                array.map((item) => {
-                    if(item == partId){
-                        controls.removeItemAtIndex(arrayLoc);
+                // fuction to update history
+                AsyncStorage.getItem('LegoHistory').then(
+                    response => {
+                        if(response != null | undefined ){ // if there is already history on the device
+                            let results = response.split(" ");
+                            let output = partId; // first term as part Id
+                            results.forEach(item =>{
+                                if(item != partId){
+                                    output = output.concat(" ", item); // add all other part Id's not including the current one
+                                }
+                            });
+                            //console.log(output);
+                            storeData(output);
+                            //AsyncStorage.clear(); // clears all stored values
                     }
-                    arrayLoc += 1;
-                } 
+                    else if(response == null){ // if there is no history on the device
+                        let output = partId.concat(" ");
+                        //console.log(output);
+                        storeData(output);
+                    }
+                }
                 );
-                controls.push(partId) // then push that partId onto the array
-                //console.log(partId)
-                writeArray(JSON.stringify(array));
             };
         }, [partId])
     );

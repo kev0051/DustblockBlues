@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback, Pressable } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { SearchBar, ListItem, Avatar } from "@rneui/themed";
+import { ListItem, Avatar } from "@rneui/themed";
 import { Divider } from "@react-native-material/core";
 import React, { useState, useEffect, useContext } from "react";
 import InformationModal from '../../components/Information';
@@ -9,58 +9,45 @@ import SettingsModal from '../../components/SettingsPop';
 import themeContext from '../../config/themeContext';
 import Feather from 'react-native-vector-icons/Feather'; // Icon from https://github.com/oblador/react-native-vector-icons
 
-
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function HistoryScreen({navigation}){
   // theme
   const theme = useContext(themeContext);
   const [legos, setLegos] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  //array to hold json lego db
-  //const legos = require('../../assets/database.json')
-  //search term that is typed in the search bar
-  //const [searchTerm, setSearchTerm] = useState("")
-/*
-  useEffect(() => {
-    fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
-      .then(response => response.json())
-      .then(data => setLegos(data))
-      .catch(error => console.error(error));
-  }, []);
-  */
-  useEffect(() => {
-    fetch('https://api.npoint.io/f7689e80de563c693342')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-      .then(data => setLegos(data))
-      .catch(error => console.error(error));
-  }, []);
-  //updates searching if letters are typed in the search bar
-  const updateSearch = (searchTerm) => {
-    setSearchTerm(searchTerm)
-  };
+  const [history, setHistory] = useState([]);
+  const [results, setResults] = useState([]);
 
-  //function that searches and filters the array based on search request
-  let results = legos.filter(function(lego) {
-    //if user types in spaces
-    if (searchTerm.trim().length == 0){
-      return legos
-    }
-      
-    //searching based on part name
-    let partName = lego.PartName.toLowerCase().indexOf(searchTerm.trim().toLowerCase()) > -1
-    //searching based on partID
-    let partID = lego.PartID.toLowerCase().indexOf(searchTerm.trim().toLowerCase()) > -1
-    //searching based on color
-    let color = lego.Colour.toLowerCase().indexOf(searchTerm.trim().toLowerCase()) > -1
-    
-    //return concatenated results
-    return partName+partID+color;
-  });
+  useFocusEffect(
+    React.useCallback(() => {
+        AsyncStorage.getItem('LegoDB').then( response => {
+          if(response != null | undefined) {
+            setLegos(JSON.parse(response))
+        AsyncStorage.getItem('LegoHistory').then(
+            response => {
+                if(response != null | undefined ){ // if there is already history on the device
+                    setHistory(response);
+                    var partIDs = history.split(" ");
+                    var sortedLegoHist = partIDs.map(x => legos.find(item => item.PartID === x)); 
+                    setResults(sortedLegoHist);
+                    //AsyncStorage.clear(); // clears all stored values
+            }
+            else if(response == null){ // if there is no history on the device
+                setResults([]);
+                setHistory([]);
+            }
+        });
+      }
+      else{
+        // error getting the database
+      }
+        return() => {
+
+        };
+      });
+    }, [legos, history])
+);
 
  return(
     <View style={{backgroundColor: theme.background}}>
@@ -73,9 +60,7 @@ function HistoryScreen({navigation}){
      
       <ScrollView style={{position:'relative', marginBottom:90, backgroundColor: theme.background}}>
 
-      <Text style={{...styles.text, left:20,fontWeight:'bold', fontSize:30, color: theme.color}}>Lego Pieces</Text>
-      <Text style={{...styles.text, color: theme.color}}>Please select the piece you would like to identify</Text>
-      <SearchBar onChangeText={updateSearch} value={searchTerm} placeholder="Search" platform="ios" containerStyle={{position:'relative',margin:16, backgroundColor: theme.background}}/>
+      <Text style={{...styles.text, left:20,fontWeight:'bold', fontSize:30, color: theme.color}}>History</Text>
       <Divider style={{ marginTop: 10,marginLeft:20,marginRight:20,}}/>
       {/* iterate over the json file and print one by one */}
       
@@ -85,7 +70,7 @@ function HistoryScreen({navigation}){
           <ListItem.Content>
             <ListItem.Title style={{color: theme.color}}>{item.PartName}</ListItem.Title>
             <ListItem.Subtitle style={{color: theme.color}}>{'Category: ' + item.Category}</ListItem.Subtitle>
-          </ListItem.Content>
+            </ListItem.Content> 
           </ListItem>
       ))}
 

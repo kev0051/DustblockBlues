@@ -8,6 +8,8 @@ import ttsContext from "../config/ttsContext";
 import { EventRegister } from 'react-native-event-listeners';
 import Feather from 'react-native-vector-icons/Feather'; // Icon from https://github.com/oblador/react-native-vector-icons
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function SettingsModal() {
     const theme = useContext(themeContext);
     const [themeMode, setThemeMode] = useState(false);
@@ -17,6 +19,9 @@ function SettingsModal() {
   const [isModalVisible, setModalVisible] = useState(false);
   // theme
 
+  const ResetHist = async () => {
+    await AsyncStorage.removeItem('LegoHistory');
+  }
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -51,6 +56,7 @@ function SettingsModal() {
             
             <Text style={ {...styles.text, color: theme.color,marginTop:-20}}>Dark Mode</Text>
             </View>
+            <Text style={ {...styles.text, color: theme.color, marginLeft:100}}onPress={ResetHist}>Reset History</Text>
             <View style={{flexDirection:'row', alignItems:'center',marginLeft:30,marginTop:10}}>
             </View>
 
