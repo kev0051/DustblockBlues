@@ -5,8 +5,7 @@ import {AutoFocus, Camera} from 'expo-camera';
 import axios from 'axios';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useFocusEffect } from '@react-navigation/native';
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -164,22 +163,29 @@ import { useFocusEffect } from '@react-navigation/native';
   */
 
   useEffect(() => {
-    fetch('https://api.npoint.io/f7689e80de563c693342')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    AsyncStorage.getItem('LegoDB').then(
+      database => {
+        if(database === null){
+        fetch('https://api.npoint.io/f7689e80de563c693342')
+        .then(response => {
+          if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+        })
+        .then(
+          data => { setLegos(data);
+            AsyncStorage.setItem('LegoDB', JSON.stringify(data));
+          }
+      
+        )
+        .catch(error => console.error(error));
+        }
+      else{
+        setLegos(JSON.parse(database));
       }
-      return response.json();
     })
-      .then(data => setLegos(data))
-      .catch(error => console.error(error));
   }, []);
-    //speech function
-    const speakPrediction = () => {
-      const textToSay = 'LEGO piece Predicted' + legoPrediction[0].PartName;
-      Speech.speak(textToSay);
-
-    };
   // const speakDismiss = () => {
   //     const textToSay = 'Dismiss';
   //     Speech.speak(textToSay);

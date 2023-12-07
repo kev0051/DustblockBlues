@@ -30,20 +30,28 @@ function HomeScreen({navigation}){
   }, []);
   */
   useEffect(() => {
-    fetch('https://api.npoint.io/f7689e80de563c693342')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-      .then(
-        data => { setLegos(data);
-          AsyncStorage.setItem('LegoDB', JSON.stringify(data));
+    AsyncStorage.getItem('LegoDB').then(
+      database => {
+        if(database === null){
+        fetch('https://api.npoint.io/f7689e80de563c693342')
+        .then(response => {
+          if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        return response.json();
+        })
+        .then(
+          data => { setLegos(data);
+            AsyncStorage.setItem('LegoDB', JSON.stringify(data));
+          }
       
-      )
-      .catch(error => console.error(error));
+        )
+        .catch(error => console.error(error));
+        }
+      else{
+        setLegos(JSON.parse(database));
+      }
+    })
   }, []);
   //updates searching if letters are typed in the search bar
   const updateSearch = (searchTerm) => {
