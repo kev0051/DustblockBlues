@@ -6,13 +6,15 @@ import albumentations as A
 import time
 from tqdm import tqdm
 
+# -- CHANGE 1 -- 
 # Set the prefix for output files (can be modified)
-output_prefix = "2815 (6028041)"
+output_prefix = "3706 (370626)"
 
+# -- CHANGE 2 --
 # Set the base directory and output subdirectories 
 BASE_DIR = "piece_data"  # Set the base directory
 OUTPUT_DIR_IMAGES = os.path.join('data', 'images', 'test')  # Replace 'output_directory' with the directory where you want to save the image
-OUTPUT_DIR_MASKS = os.path.join('data', 'masks', 'test')
+OUTPUT_DIR_MASKS = os.path.join('data', 'masks', 'train')
 OUTPUT_DIR_LABELS = os.path.join('data', 'labels', 'test')
 
 # Create the output directory if it doesn't exist
@@ -424,11 +426,12 @@ files_bg_noise_masks = [os.path.join(PATH_MAIN, "bg_noise", "masks", f) for f in
 #print("\nThe first five files from the sorted list of background noise images:", files_bg_noise_imgs[:5])
 #print("\nThe first five files from the sorted list of background noise masks:", files_bg_noise_masks[:5])
 
+# -- CHANGE 3 --
 # Number of iterations (scenes created) 
-num_iterations = 50
+num_iterations = 50 # (train 900) (validation 50) (test 50)
 
 # Choose the starting value for iteration_number
-start_iteration = 951
+start_iteration = 950 # (train 0) (validation 900) (test 950)
 
 # Loop for 5 iterations
 for iteration_number in range(start_iteration, start_iteration + num_iterations):
@@ -466,7 +469,7 @@ for iteration_number in range(start_iteration, start_iteration + num_iterations)
 
         # Save images and annotations
         cv2.imwrite(output_image_path, img_comp)
-        cv2.imwrite(output_mask_path, mask_comp * 255)
+        #cv2.imwrite(output_mask_path, mask_comp * 255) -- CHANGE uncomment this if you want to save masks
 
         # Include the information about the output object in the labels_comp list
         labels_comp.append(output_obj_idx)
