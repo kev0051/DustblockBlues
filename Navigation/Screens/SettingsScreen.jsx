@@ -25,6 +25,7 @@ function SettingsScreen({navigation}){
 
     const ResetHist = async () => {
       await AsyncStorage.clear('LegoHistory');
+      await AsyncStorage.clear('LegoDB');
     }
 
     return(

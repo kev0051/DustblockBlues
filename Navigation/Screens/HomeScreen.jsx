@@ -21,6 +21,7 @@ function HomeScreen({navigation}){
   //const legos = require('../../assets/database.json')
   //search term that is typed in the search bar
   //const [searchTerm, setSearchTerm] = useState("")
+
 /*
   useEffect(() => {
     fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
@@ -28,12 +29,13 @@ function HomeScreen({navigation}){
       .then(data => setLegos(data))
       .catch(error => console.error(error));
   }, []);
-  */
+*/
+
   useEffect(() => {
     AsyncStorage.getItem('LegoDB').then(
       database => {
         if(database === null){
-        fetch('https://api.npoint.io/f7689e80de563c693342')
+        fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
         .then(response => {
           if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,6 +55,7 @@ function HomeScreen({navigation}){
       }
     })
   }, []);
+
   //updates searching if letters are typed in the search bar
   const updateSearch = (searchTerm) => {
     setSearchTerm(searchTerm)
@@ -88,11 +91,9 @@ function HomeScreen({navigation}){
       <ScrollView style={{position:'relative', marginBottom:90, backgroundColor: theme.background}}>
 
       <Text style={{...styles.text, left:20,fontWeight:'bold', fontSize:30, color: theme.color}}>Lego Pieces 
-      <View style={{...styles.text, right:30}}>
-      <Button onPress={() => navigation.navigate('History',{item:legos})} title="View History"/>
-      </View>
       </Text>
       <Text style={{...styles.text, color: theme.color}}>Please select the piece you would like to identify</Text>
+      <Button onPress={() => navigation.navigate('History',{item:legos})} title="View History"/>
       <SearchBar onChangeText={updateSearch} value={searchTerm} placeholder="Search" platform="ios" containerStyle={{position:'relative',margin:16, backgroundColor: theme.background}}/>
       <Divider style={{ marginTop: 10,marginLeft:20,marginRight:20,}}/>
       {/* iterate over the json file and print one by one */}
