@@ -35,7 +35,7 @@ function HomeScreen({navigation}){
     AsyncStorage.getItem('LegoDB').then(
       database => {
         if(database === null){
-        fetch('https://raw.githubusercontent.com/ReedNathan001/DBBDatabase/main/database.json')
+        fetch('https://api.npoint.io/f7689e80de563c693342')
         .then(response => {
           if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
