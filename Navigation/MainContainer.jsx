@@ -20,6 +20,7 @@ import CameraScreen from './Screens/CameraScreen';
 import LocateScreen from './Screens/LocateScreen';
 import SettingsScreen from './Screens/SettingsScreen';
 import LegoPartScreen from './Screens/LegoPartScreen';
+import FavoritesScreen from './Screens/FavoritesScreen';
 import { useState, useContext } from 'react';
 import { useEffect } from 'react';
 
@@ -30,6 +31,7 @@ const cameraName = "Camera";
 const settingsName = "Settings";
 const legoPartsName = "Lego";
 const historyName = "History";
+const favoritesName = "Favorites";
 
 const Tab = createBottomTabNavigator();
 
@@ -70,6 +72,7 @@ export default function MainContainer(){
               legoPartsName,
               settingsName,
               historyName,
+              favoritesName,
             ].includes(route.name)
               ? () => {
                   return null;
@@ -129,6 +132,7 @@ export default function MainContainer(){
           <Tab.Screen options={{headerShown: false}} name={settingsName} component={SettingsScreen} />
           <Tab.Screen options={{ headerShown: false}} name={legoPartsName} component={LegoPartScreen} />
           <Tab.Screen options={{ headerShown: false}} name={historyName} component={HistoryScreen} />
+          <Tab.Screen options={{ headerShown: false }} name={favoritesName} component={FavoritesScreen} />
 
         </Tab.Navigator>
       </NavigationContainer>
