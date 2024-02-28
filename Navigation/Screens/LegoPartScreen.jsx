@@ -25,7 +25,6 @@ function LegoPartScreen({ route, navigation}){
    
     //variable to toggle full screen image
     const [showModal, setShowModal] = useState(false)
-    const [isInFavorites, setIsInFavorites] = useState(false);
 
     // theme
     const theme = useContext(themeContext);
@@ -62,47 +61,13 @@ function LegoPartScreen({ route, navigation}){
         }
     };
     
-    const checkIfInFavorites = async () => {
-      try {
-        const favoritesString = await AsyncStorage.getItem('LegoFavorites');
-        const favorites = favoritesString ? favoritesString.split(' ') : [];
-        
-        setIsInFavorites(favorites.includes(partId));
-      } catch (error) {
-        console.error('Error checking if part is in favorites:', error);
-      }
-    };
-    
-    const toggleFavorites = async () => {
-      try {
-        const favoritesString = await AsyncStorage.getItem('LegoFavorites');
-        let favorites = favoritesString ? favoritesString.split(' ') : [];
-        
-        if (isInFavorites) {
-          // Remove part from favorites
-          favorites = favorites.filter((item) => item !== partId);
-          setIsInFavorites(false);
-        } else {
-          // Add part to favorites
-          favorites.push(partId);
-          setIsInFavorites(true);
-        }
-        
-        // Update AsyncStorage with the new favorites list
-        await AsyncStorage.setItem('LegoFavorites', favorites.join(' '));
-      } catch (error) {
-        console.error('Error toggling favorites:', error);
-      }
-    };
-  
+
     storeData = async (newValue) => {
         await AsyncStorage.setItem('LegoHistory', newValue);
     };
-  
-  
+    
     useFocusEffect(
         React.useCallback(() => {
-          checkIfInFavorites();
             return () => {
                 // fuction to update history
                 AsyncStorage.getItem('LegoHistory').then(
@@ -187,19 +152,9 @@ function LegoPartScreen({ route, navigation}){
                 <Text style={{...styles.infoText, color: theme.color}}onPress={speakCategory}>{'Category: ' + legoCategory}</Text>
             </ScrollView>
 
-            <Pressable style={[styles.locateButton, {marginTop:50}]} onPress={()=>navigation.navigate('Locate', { partId: partId})}>
+            <Pressable style={[styles.locateButton, {marginTop:25}]} onPress={()=>navigation.navigate('Locate', { partId: partId})}>
                 <Text style={styles.locateText}>Locate</Text>
             </Pressable>
-            
-            {!isInFavorites ? (
-              <Pressable style={[styles.addToFavoritesButton, { marginTop: 50 }]} onPress={toggleFavorites}>
-              <Text style={styles.addToFavoritesButtonText}>Favorite</Text>
-              </Pressable>
-            ) : (
-              <Pressable style={[styles.addToFavoritesButton, { marginTop: 50, backgroundColor: 'red' }]} onPress={toggleFavorites}>
-              <Text style={styles.addToFavoritesButtonText}>Unfavorite</Text>
-              </Pressable>
-            )}
 
         </View>
     )
@@ -207,39 +162,20 @@ function LegoPartScreen({ route, navigation}){
 
 //page styling
 const styles = StyleSheet.create({
-  
-    addToFavoritesButton: {
-      position: "absolute",
-      top:"85%",
-      right: "3%",
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '44%', // Adjust the width as needed
-      height: 40, // Adjust the height as needed
-      borderRadius: 20, // Adjust the border radius as needed
-      backgroundColor: '#ff0000',
-      alignSelf: 'center',
-    },
-    
-    addToFavoritesButtonText: {
-      fontSize: 22,
-      fontWeight: 'bold',
-      color: 'white',
-    },
 
     locateButton: {
         position: "absolute",
         top:"85%",
-        left: "3%",
+        left: "10%",
         alignItems: 'center',
         justifyContent: 'center',
-        width: "44%",
-        height: 40,
-        borderRadius: 20,
+        width: "80%",
+        height: "9%",
+        borderRadius: 50,
         backgroundColor: "#ff0000",
     },
     locateText: {
-        fontSize: 22,
+        fontSize: 25,
         fontWeight: 'bold',
         color: 'white',
     },
@@ -255,7 +191,7 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '75%',
         resizeMode: 'contain',
-        objectFit: "contain"
+        objectfit: "contain"
     },
     title:{
         position: "relative",

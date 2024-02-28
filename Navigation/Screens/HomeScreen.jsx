@@ -94,7 +94,6 @@ function HomeScreen({navigation}){
       </Text>
       <Text style={{...styles.text, color: theme.color}}>Please select the piece you would like to identify</Text>
       <Button onPress={() => navigation.navigate('History',{item:legos})} title="View History"/>
-      <Button onPress={() => navigation.navigate('Favorites', { item: legos })} title="View Favorites" />
       <SearchBar onChangeText={updateSearch} value={searchTerm} placeholder="Search" platform="ios" containerStyle={{position:'relative',margin:16, backgroundColor: theme.background}}/>
       <Divider style={{ marginTop: 10,marginLeft:20,marginRight:20,}}/>
       {/* iterate over the json file and print one by one */}
