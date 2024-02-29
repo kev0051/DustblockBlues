@@ -186,6 +186,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
       }
     })
   }, []);
+    const speakPrediction = () => {
+      const textToSay = 'LEGO piece Prediction' + legoPrediction[0].PartName;
+      Speach.speak(textToSay);
+    };
   // const speakDismiss = () => {
   //     const textToSay = 'Dismiss';
   //     Speech.speak(textToSay);
