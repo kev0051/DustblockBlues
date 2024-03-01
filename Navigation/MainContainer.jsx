@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import {  Text, View } from 'react-native';
 import { NavigationContainer, CommonActions  } from '@react-navigation/native';
@@ -9,7 +10,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import { EventRegister } from 'react-native-event-listeners';
 import themeContext from '../config/themeContext';
 import theme from '../config/theme';
-
+import {Alert } from 'react-native';
 import ttsContext from "../config/ttsContext";
 import tts from '../config/tts';
 
@@ -48,7 +49,7 @@ export default function MainContainer(){
         EventRegister.removeEventListener(eventListener);
       };
     })
-
+  
     useEffect(() => {
       let eventListener = EventRegister.addEventListener("changeTts", (data) => {
         setTtsMode(data);
@@ -58,7 +59,7 @@ export default function MainContainer(){
       };
     });
 
-
+  
 
     return(
 
@@ -84,7 +85,7 @@ export default function MainContainer(){
             tabBarIcon: ({ focused}) => {
               let outlined;
               let rn = route.name;
-
+  
               if (rn === homeName) {
                 outlined = focused ? '#ff0000' : '#808080';
                 return (
@@ -93,7 +94,7 @@ export default function MainContainer(){
                         <Text style={{color:outlined, fontSize:20,position:'relative',left:-5,bottom:-3,textAlign:'center'}}>Home</Text>
                     </View>
                 )
-
+                
               } else if (rn === cameraName) {
                 outlined = focused ? '#ff0000' : '#808080';
                 return (
@@ -102,7 +103,7 @@ export default function MainContainer(){
                         <Text style={{color:outlined, fontSize:20,position:'relative',left:-10,bottom:-3,textAlign:'center'}}>Identify</Text>
                     </View>
                 )
-
+  
               } 
               else if (rn === settingsName) {
                 outlined = focused ? '#ff0000' : '#808080';
@@ -124,11 +125,44 @@ export default function MainContainer(){
               }
             },
           })}>
-
-
+          
           <Tab.Screen options={{ headerShown: false}}name={homeName} component={HomeScreen} />
-          <Tab.Screen options={{headerShown: false, unmountOnBlur: true,}} name={cameraName} component={CameraScreen} />
-          <Tab.Screen options={{headerShown: false, unmountOnBlur: true,}} name={locateName} component={LocateScreen} />
+          <Tab.Screen 
+    options={{ 
+      headerShown: false, 
+      unmountOnBlur: true,
+    }} 
+    name={cameraName} 
+    component={CameraScreen}
+    listeners={({ navigation }) => ({
+      tabPress: e => {
+        // Prevent default action
+        e.preventDefault();
+        Alert.alert(`Press the white circle to take a still image, or press the top right tab to start capturing live (this will consume more power)`, '', [
+          { text: "OK", onPress: () => navigation.navigate(cameraName) }
+        ]);
+      },
+    })}
+  />
+  <Tab.Screen 
+    options={{ 
+      headerShown: false, 
+      unmountOnBlur: true,
+    }} 
+    name={locateName} 
+    component={LocateScreen}
+    listeners={({ navigation }) => ({
+      tabPress: e => {
+        // Prevent default action
+        e.preventDefault();
+        Alert.alert(`Hover over a lego until you see a red bounding box, then press on this box. Or start from the home screen and press on a lego, and then press "locate"`, '', [
+          { text: "OK", onPress: () => navigation.navigate(locateName) }
+        ]);
+      },
+    })}
+  />
+          
+          
           <Tab.Screen options={{headerShown: false}} name={settingsName} component={SettingsScreen} />
           <Tab.Screen options={{ headerShown: false}} name={legoPartsName} component={LegoPartScreen} />
           <Tab.Screen options={{ headerShown: false}} name={historyName} component={HistoryScreen} />
