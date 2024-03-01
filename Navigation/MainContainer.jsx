@@ -134,6 +134,7 @@ export default function MainContainer(){
     }} 
     name={cameraName} 
     component={CameraScreen}
+    /*
     listeners={({ navigation }) => ({
       tabPress: e => {
         // Prevent default action
@@ -142,7 +143,7 @@ export default function MainContainer(){
           { text: "OK", onPress: () => navigation.navigate(cameraName) }
         ]);
       },
-    })}
+    })}*/
   />
   <Tab.Screen 
     options={{ 
@@ -151,6 +152,7 @@ export default function MainContainer(){
     }} 
     name={locateName} 
     component={LocateScreen}
+    /*
     listeners={({ navigation }) => ({
       tabPress: e => {
         // Prevent default action
@@ -159,7 +161,7 @@ export default function MainContainer(){
           { text: "OK", onPress: () => navigation.navigate(locateName) }
         ]);
       },
-    })}
+    })}*/
   />
           
           
