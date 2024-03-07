@@ -93,9 +93,17 @@ function HomeScreen({navigation}){
       <Text style={{...styles.text, left:20,fontWeight:'bold', fontSize:30, color: theme.color}}>Lego Pieces 
       </Text>
       <Text style={{...styles.text, color: theme.color}}>Please select the piece you would like to identify</Text>
-      <Button onPress={() => navigation.navigate('History',{item:legos})} title="View History"/>
-      <Button onPress={() => navigation.navigate('Favorites', { item: legos })} title="View Favorites" />
-      <SearchBar onChangeText={updateSearch} value={searchTerm} placeholder="Search" platform="ios" containerStyle={{position:'relative',margin:16, backgroundColor: theme.background}}/>
+    <View style={styles.historyButtonContainer}>
+    <Pressable style={styles.historyButton} onPress={() => navigation.navigate('History', { item: legos })}>
+    <Text style={styles.historyText}>History</Text>
+    </Pressable>
+    </View>
+    <View>
+    <Pressable style={styles.favoritesButton} onPress={() => navigation.navigate('Favorites', { item: legos })}>
+    <Text style={styles.favoritesText}>Favorites</Text>
+    </Pressable>
+    </View>
+      <SearchBar onChangeText={updateSearch} value={searchTerm} placeholder="Search" platform="ios" containerStyle={{position:'relative',margin:16, marginTop:45, backgroundColor: theme.background}}/>
       <Divider style={{ marginTop: 10,marginLeft:20,marginRight:20,}}/>
       {/* iterate over the json file and print one by one */}
       
@@ -116,6 +124,41 @@ function HomeScreen({navigation}){
 }
 
 const styles = StyleSheet.create({
+  
+  historyButton: {
+    position: "absolute",
+    top:"5%",
+    left: "3%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: "44%",
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#ff0000",
+  },
+  historyText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  
+  favoritesButton: {
+    position: "absolute",
+    top:"5%",
+    right: "3%",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: "44%",
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#ff0000",
+  },
+  favoritesText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  
   text:{
     position:'relative',
     left:20, 
@@ -125,3 +168,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen
+  

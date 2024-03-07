@@ -6,13 +6,18 @@ import axios from 'axios';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LocatePop from '../../components/LocatePop'; // adjust the path according to your file structure
 
 
 
   //camera screen function with navigation as argument
   function LocateScreen({route,navigation}){
     
-
+    const [showLocatePop, setShowLocatePop] = useState(false);
+    useEffect(() => {
+      // Show the CameraPop component when the CameraScreen component mounts
+      setShowLocatePop(true);
+    }, []);
     useFocusEffect(
       React.useCallback(() => {
         // Useful for cleanup functions
@@ -82,7 +87,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
                 method: "POST",
                 url: "https://detect.roboflow.com/lego-detection-fsxai/8",
                 params: {
-                    api_key: "uOLEkn7ugJbDKQy6Gu0k"
+                    api_key: "O6l7hNk0vu6OfoC85nD8"
                 },
                 data: image.base64,
                 headers: {
@@ -186,6 +191,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
       }
     })
   }, []);
+    const speakPrediction = () => {
+      const textToSay = 'LEGO piece Prediction' + legoPrediction[0].PartName;
+      Speach.speak(textToSay);
+    };
   // const speakDismiss = () => {
   //     const textToSay = 'Dismiss';
   //     Speech.speak(textToSay);
@@ -222,6 +231,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
     return (
       <View style={styles.container}>
+            {showLocatePop && <LocatePop isVisible={showLocatePop} onClose={() => setShowLocatePop(false)} />}
+
       {/* this is the prediction modal */}
         <Modal visible={showPrediction} transparent={true} animationType="slide" >
           <View style={styles.modal}>
