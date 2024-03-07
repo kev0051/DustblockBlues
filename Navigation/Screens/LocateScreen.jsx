@@ -6,13 +6,18 @@ import axios from 'axios';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LocatePop from '../../components/LocatePop'; // adjust the path according to your file structure
 
 
 
   //camera screen function with navigation as argument
   function LocateScreen({route,navigation}){
     
-
+    const [showLocatePop, setShowLocatePop] = useState(false);
+    useEffect(() => {
+      // Show the CameraPop component when the CameraScreen component mounts
+      setShowLocatePop(true);
+    }, []);
     useFocusEffect(
       React.useCallback(() => {
         // Useful for cleanup functions
@@ -226,6 +231,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
     return (
       <View style={styles.container}>
+            {showLocatePop && <LocatePop isVisible={showLocatePop} onClose={() => setShowLocatePop(false)} />}
+
       {/* this is the prediction modal */}
         <Modal visible={showPrediction} transparent={true} animationType="slide" >
           <View style={styles.modal}>
