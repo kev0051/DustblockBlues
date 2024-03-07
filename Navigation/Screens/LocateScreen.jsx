@@ -85,21 +85,21 @@ import LocatePop from '../../components/LocatePop'; // adjust the path according
       
             axios({
                 method: "POST",
-                url: "https://detect.roboflow.com/lego-detection-fsxai/8",
-                params: {
-                    api_key: "O6l7hNk0vu6OfoC85nD8"
-                },
-                data: image.base64,
+                url: "https://api.ultralytics.com/v1/predict/F4uh4Si5smcMbQIyupBV",
+                data: {
+		  "size": 640, "confidence": 0.25, "iou": 0.45
+	      },
                 headers: {
-                  "Content-Type": "application/x-www-form-urlencoded"
-              }
+                  "x-api-key": "2c23bbb4564f2f2e302d6f2293e849feedd3df9018"
+              },
+		files: {"image": image.base64}
         
             })
             .then(function(response) {
               let res = []
               try{
                 if (route.params.partId){
-                  // console.log("ran")
+                  console.log("ran")
 
                     for(var i = 0; i < response.data.predictions.length; i++ ){
                       if(response.data.predictions[i].class === route.params.partId){
