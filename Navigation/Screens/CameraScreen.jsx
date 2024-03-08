@@ -354,6 +354,12 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
                     source={{ uri: legoPrediction[0].ImageURL }}
                   />
                   </TouchableWithoutFeedback>,
+                   legoPrediction[1] < 50 &&
+                  <Pressable key={3} style={{ zIndex: 100, top: 150 }} onPress={() => handleTryAgain()}>
+                    <Text style={{ fontSize: 20, color: "white", fontWeight: 'bold', textAlign: "center" }}>
+                      Try Again
+                    </Text>
+                  </Pressable>
                   ] :
                   null
           }
