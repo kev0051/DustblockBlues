@@ -88,12 +88,13 @@ function LocateScreen({ route, navigation }) {
             .then((responseJson) => {
               let res = [];
               try {
-                console.log(responseJson.data);
+                //console.log(responseJson.data);
                 res = responseJson.data;
                 if (route.params.partId) {
+                  const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
                   for (var i = 0; i < responseJson.data.length; i++) {
-                    console.log(responseJson.data[i].name)
-                    if (responseJson.data[I].class === route.params.partId) {
+                    const match = responseJson.data[i].name.match(regex); // Extract the number using regex
+                    if (match[1] === route.params.partId) { // match extracted num with partID
                       res = [{ ...responseJson.data[i], confidence: responseJson.data[i].confidence * 100 }];
                       setPartLocation(true);
                       Vibration.vibrate();
@@ -103,9 +104,13 @@ function LocateScreen({ route, navigation }) {
               } catch (e) {
                 res = responseJson.data;
               } finally {
-		for(var I=0; I<res.length; I++) {
-		     console.log(res[I].name);
-		}
+                const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
+                for(var i = 0; i < res.length; i++){
+                  const match = res[i].name.match(regex); // Extract the number using regex
+                  //console.log(match[1]);
+                  res[i].name = match[1];
+                }
+                //console.log(res);
                 setLegoLocations(res);
               }
             })
@@ -217,7 +222,9 @@ function LocateScreen({ route, navigation }) {
           key={index}
           onStartShouldSetResponder={() => {
             for (var i = 0; i < legos.length; i++) {
-              if (legos[i].PartID === prediction.class) {
+              console.log(prediction.name);
+              if (legos[i].PartID === prediction.name) {
+                console.log("Found Part:" + partID);
                 setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100]);
               }
             }
@@ -237,7 +244,7 @@ function LocateScreen({ route, navigation }) {
             },
           ]}>
           <Text style={styles.predictionClass}>
-            {prediction.class} ({(prediction.confidence * 100).toFixed(2)}%)
+            {prediction.name} ({(prediction.confidence * 100).toFixed(2)}%)
           </Text>
         </View>
       ))}
@@ -252,10 +259,10 @@ function LocateScreen({ route, navigation }) {
             Height:{(((Dimensions.get('window').height - 130) / 512) * prediction.height).toFixed(0)}
           </Text>
           <Text style={styles.partLocationText}>
-            X:{(((prediction.y1 / 512) * (Dimensions.get('window').height - 130)) - (((Dimensions.get('window').height - 130) / 512) * prediction.height / 2)).toFixed(0)}
+            X:{(((prediction.ycenter / 512) * (Dimensions.get('window').height - 130)) - (((Dimensions.get('window').height - 130) / 512) * prediction.height / 2)).toFixed(0)}
           </Text>
           <Text style={styles.partLocationText}>
-            Y:{(((prediction.x1 / 400) * Dimensions.get('window').width) - ((Dimensions.get('window').width / 400) * prediction.width / 2)).toFixed(0)}
+            Y:{(((prediction.xcenter / 400) * Dimensions.get('window').width) - ((Dimensions.get('window').width / 400) * prediction.width / 2)).toFixed(0)}
           </Text>
         </View>
       )}
