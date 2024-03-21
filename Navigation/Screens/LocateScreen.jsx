@@ -40,6 +40,12 @@ function LocateScreen({ route, navigation }) {
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   let cameraRef = useRef();
 
+  const [legoPrediction, setLegoPrediction] = useState(null);
+  const [showPrediction, setShowPrediction] = useState(false);
+  const [legoLocations, setLegoLocations] = useState([]);
+  const [partLocation, setPartLocation] = useState(false);
+  const [legos, setLegos] = useState([]);
+
   let frame1 = 0;
   const computeRecognitionEveryNFrames1 = 60;
   function takePic() {
@@ -90,11 +96,19 @@ function LocateScreen({ route, navigation }) {
               try {
                 //console.log(responseJson.data);
                 res = responseJson.data;
+
+                // function to sanatize output
+                const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
+                for(var i = 0; i < res.length; i++){
+                  const match = res[i].name.match(regex); // Extract the number using regex
+                  //console.log(match[1]);
+                  res[i].name = match[1];
+                }
+                console.log(res);
+
                 if (route.params.partId) {
-                  const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
-                  for (var i = 0; i < responseJson.data.length; i++) {
-                    const match = responseJson.data[i].name.match(regex); // Extract the number using regex
-                    if (match[1] === route.params.partId) { // match extracted num with partID
+                  for (var i = 0; i < res.length; i++) {
+                    if (res[i].name === route.params.partId) {
                       res = [{ ...responseJson.data[i], confidence: responseJson.data[i].confidence * 100 }];
                       setPartLocation(true);
                       Vibration.vibrate();
@@ -102,16 +116,11 @@ function LocateScreen({ route, navigation }) {
                   }
                 }
               } catch (e) {
-                res = responseJson.data;
+                res = res;
+                console.log(res);
               } finally {
-                const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
-                for(var i = 0; i < res.length; i++){
-                  const match = res[i].name.match(regex); // Extract the number using regex
-                  //console.log(match[1]);
-                  res[i].name = match[1];
-                }
-                //console.log(res);
                 setLegoLocations(res);
+                console.log(legoLocations);
               }
             })
             .catch((error) => {
@@ -127,12 +136,6 @@ function LocateScreen({ route, navigation }) {
 
     loop();
   }
-
-  const [legoPrediction, setLegoPrediction] = useState(null);
-  const [showPrediction, setShowPrediction] = useState(false);
-  const [legoLocations, setLegoLocations] = useState([]);
-  const [partLocation, setPartLocation] = useState(false);
-  const [legos, setLegos] = useState([]);
 
   useEffect(() => {
     AsyncStorage.getItem('LegoDB').then((database) => {
@@ -221,8 +224,8 @@ function LocateScreen({ route, navigation }) {
         <View
           key={index}
           onStartShouldSetResponder={() => {
+            console.log(prediction);
             for (var i = 0; i < legos.length; i++) {
-              console.log(prediction.name);
               if (legos[i].PartID === prediction.name) {
                 console.log("Found Part:" + partID);
                 setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100]);
