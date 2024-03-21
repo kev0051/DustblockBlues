@@ -76,7 +76,7 @@ function LocateScreen({ route, navigation }) {
             type: 'image/jpg',
           });
 
-          fetch('https://api.ultralytics.com/v1/predict/F4uh4Si5smcMbQIyupBV', {
+          fetch('https://api.ultralytics.com/v1/predict/aYSSOaH4z5yUrYoUETcX', {
             method: 'POST',
             headers: {
               'x-api-key': '2c23bbb4564f2f2e302d6f2293e849feedd3df9018',
@@ -89,12 +89,11 @@ function LocateScreen({ route, navigation }) {
               let res = [];
               try {
                 console.log(responseJson.data);
-                //console.log(responseJson.data.name);
                 res = responseJson.data;
                 if (route.params.partId) {
                   for (var i = 0; i < responseJson.data.length; i++) {
                     console.log(responseJson.data[i].name)
-                    if (responseJson.data[i].name === route.params.partId) {
+                    if (responseJson.data[I].class === route.params.partId) {
                       res = [{ ...responseJson.data[i], confidence: responseJson.data[i].confidence * 100 }];
                       setPartLocation(true);
                       Vibration.vibrate();
@@ -104,6 +103,9 @@ function LocateScreen({ route, navigation }) {
               } catch (e) {
                 res = responseJson.data;
               } finally {
+		for(var I=0; I<res.length; I++) {
+		     console.log(res[I].name);
+		}
                 setLegoLocations(res);
               }
             })
@@ -215,7 +217,7 @@ function LocateScreen({ route, navigation }) {
           key={index}
           onStartShouldSetResponder={() => {
             for (var i = 0; i < legos.length; i++) {
-              if (legos[i].PartID === prediction.name) {
+              if (legos[i].PartID === prediction.class) {
                 setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100]);
               }
             }
@@ -235,7 +237,7 @@ function LocateScreen({ route, navigation }) {
             },
           ]}>
           <Text style={styles.predictionClass}>
-            {prediction.name} ({(prediction.confidence * 100).toFixed(2)}%)
+            {prediction.class} ({(prediction.confidence * 100).toFixed(2)}%)
           </Text>
         </View>
       ))}
