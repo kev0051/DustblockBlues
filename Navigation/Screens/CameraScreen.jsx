@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Image,View,StyleSheet,Dimensions,Pressable,Modal,Text,ActivityIndicator, TouchableWithoutFeedback,} from 'react-native';
+import React, {useState, useEffect, useRef, useContext} from 'react';
+import {Image,View,StyleSheet,Dimensions,Pressable,Modal,Text,ActivityIndicator, TouchableWithoutFeedback, Alert, TouchableOpacity} from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import {startPrediction} from '../../helpers/tensor-helper';
 import {Camera} from 'expo-camera';
@@ -11,9 +11,9 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as Speech from 'expo-speech';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraPop from '../../components/CameraPop'; // adjust the path according to your file structure
-
-
-
+import finderror from '../../assets/finderror.png'; // replace with the actual path to your image
+import ttsContext from "../../config/ttsContext";
+import tts from '../../config/tts';
 
 //tensor flow initializations
   const initialiseTensorflow = async () => {
@@ -36,6 +36,16 @@ import CameraPop from '../../components/CameraPop'; // adjust the path according
   
   //camera screen function with navigation as argument
   function CameraScreen({navigation}){
+
+    const tts = useContext(ttsContext);
+
+const handleTextPress = (text) => {  
+  if (tts.ttsChoice === "true") {
+    Speech.speak(text);
+  }
+};
+const warningText = 'The prediction confidence is low. If this error persists please ensure viewing the LEGO from a top-down angle, in a well-lit area, on a uniform background, and without any obstructions.';
+
     
     const [showCameraPop, setShowCameraPop] = useState(false);
 
@@ -81,9 +91,10 @@ import CameraPop from '../../components/CameraPop'; // adjust the path according
 
     //speech function
     const speakPrediction = () => {
-      const textToSay = 'LEGO piece Predicted' + legoPrediction[0].PartName;
-      Speech.speak(textToSay);
-
+      const textToSay = legoPrediction[0].PartName; //easier to hear like this
+      if (tts.ttsChoice === "true") {
+        Speech.speak(textToSay);
+      }
     };
   // const speakDismiss = () => {
   //     const textToSay = 'Dismiss';
@@ -238,7 +249,6 @@ useEffect(() => {
   }
 */
 
-
 let frameCount = 0;
 const captureEveryNFrames = 30; // Change this to capture frames less or more frequently
 //30fps so 1 frame captured per second
@@ -274,7 +284,11 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
           //finding lego based on ID and setting it to state of prediction model
           for (var i = 0; i < legos.length; i++){
             if (legos[i].PartID === RESULT_MAPPING[highestPrediction]){
-              setLegoPrediction([legos[i], Number(100*prediction[highestPrediction]).toFixed(1) ])
+              const predictionPercentage = Number(100*prediction[highestPrediction]).toFixed(1);
+          setLegoPrediction([legos[i], predictionPercentage])
+          if (predictionPercentage < 80) {
+            setShowCameraPop(true);
+          }
             }
           }
           //activates prediction modal
@@ -292,33 +306,49 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
 
 
     return (
-      <View style={styles.container}>
-      {/* this is the prediction modal */}
-        <Modal visible={showPrediction} transparent={true} animationType="slide" >
-          <View style={styles.modal}>
-            <View style={styles.modalContent}>
-              {/* if theres a prediction ready, it is displayed to user, else it is just the loading screen */}
-              {legoPrediction ? 
-                [
-                  <Text key= {0} style={{ fontSize: 30, color:"black", fontWeight:'bold'}}onPress={speakPrediction}> {"Prediction: " + legoPrediction[1] + "%"}</Text>,
-                  <Image
-                  key = {1}
-                  style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
-                  source={{ uri: legoPrediction[0].ImageURL }}
-                  />,
-                  <Text key = {2}>{legoPrediction[0].PartName}</Text>,
-                  // takes user to the full part information if they desire
-                  <Pressable key = {3}
-                    style={styles.goToPartButton}
-                    onPress={() => {
-                      navigation.navigate('Lego',{ item:legoPrediction[0]})
-                      setShowPrediction(false)
-                      setLegoPrediction(null)
-                      
-                      
-                    }}>
-                    <Text>Go To Part Page</Text>
-                  </Pressable> 
+<View style={styles.container}>
+  {/* this is the prediction modal */}
+  <Modal visible={showPrediction} transparent={true} animationType="slide" >
+    <View style={styles.modal}>
+      <View style={styles.modalContent}>
+        {/* if theres a prediction ready, it is displayed to user, else it is just the loading screen */}
+        {legoPrediction ? 
+          [
+            <Text key= {0} style={{ fontSize: 30, color:"black", fontWeight:'bold'}}onPress={speakPrediction}> {"Prediction: " + legoPrediction[1] + "%"}</Text>,
+            legoPrediction[1] >= 80 && 
+            <Image
+              key = {1}
+              style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
+              source={{ uri: legoPrediction[0].ImageURL }}
+            />,
+            legoPrediction[1] >= 80 && 
+            <TouchableOpacity onPress={() => handleTextPress(legoPrediction[0].PartName)}>
+            <Text key={2}>{legoPrediction[0].PartName}</Text>
+          </TouchableOpacity>,
+            legoPrediction[1] >= 80 && 
+              <Pressable key = {3}
+                style={styles.goToPartButton}
+                onPress={() => {
+                  navigation.navigate('Lego',{ item:legoPrediction[0]})
+                  setShowPrediction(false)
+                  setLegoPrediction(null)
+                }}>
+                <Text>Go To Part Page</Text>
+              </Pressable>, 
+                  // Add a message when the prediction is below 50
+    legoPrediction[1] < 80 &&
+    <Image
+  key = {5}
+  style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
+  source={legoPrediction[1] < 80 ? finderror : null}
+/>,
+    legoPrediction[1] < 80 &&
+    <TouchableOpacity onPress={() => handleTextPress(warningText)}
+        style={{ backgroundColor: 'white' }}>
+        <Text key={4} style={{ color: 'red' }}>
+          {warningText}
+        </Text>
+      </TouchableOpacity>
                 ]:
                 <ActivityIndicator size="large" />
               }

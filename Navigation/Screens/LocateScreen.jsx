@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext } from 'react';
 import {Image,View,StyleSheet,Dimensions,Pressable,Modal,Text,ActivityIndicator, Vibration} from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import {AutoFocus, Camera} from 'expo-camera';
@@ -7,8 +7,10 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LocatePop from '../../components/LocatePop'; // adjust the path according to your file structure
-
-
+import finderror from '../../assets/finderror.png'; // replace with the actual path to your image
+import * as Speech from 'expo-speech';
+import ttsContext from "../../config/ttsContext";
+import tts from '../../config/tts';
 
   //camera screen function with navigation as argument
   function LocateScreen({route,navigation}){
@@ -139,6 +141,15 @@ import LocatePop from '../../components/LocatePop'; // adjust the path according
 
 
 
+    const tts = useContext(ttsContext);
+
+    const handleTextPress = (text) => {  
+      if (tts.ttsChoice === "true") {
+        Speech.speak(text);
+      }
+    };
+    const warningText = 'The prediction confidence is low. If this error persists please ensure viewing the LEGO from a top-down angle, in a well-lit area, on a uniform background, and without any obstructions.';
+
 
     //unused maybe useful variables
     // const [isProcessing, setIsProcessing] = useState(false);
@@ -191,9 +202,12 @@ import LocatePop from '../../components/LocatePop'; // adjust the path according
       }
     })
   }, []);
+    //speech function
     const speakPrediction = () => {
-      const textToSay = 'LEGO piece Prediction' + legoPrediction[0].PartName;
-      Speach.speak(textToSay);
+      const textToSay = legoPrediction[0].PartName; //easier to hear like this
+      if (tts.ttsChoice === "true") {
+        Speech.speak(textToSay);
+      }
     };
   // const speakDismiss = () => {
   //     const textToSay = 'Dismiss';
@@ -241,13 +255,18 @@ import LocatePop from '../../components/LocatePop'; // adjust the path according
               {legoPrediction ? 
                 [
                   <Text key= {0} style={{ fontSize: 30, color:"black", fontWeight:'bold'}}onPress={speakPrediction}> {"Prediction: " + legoPrediction[1] + "%"}</Text>,
+                  legoPrediction[1] >= 40 && 
                   <Image
                   key = {1}
                   style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
                   source={{ uri: legoPrediction[0].ImageURL }}
                   />,
-                  <Text key = {2}>{legoPrediction[0].PartName}</Text>,
+                  legoPrediction[1] >= 40 && 
+                  <TouchableOpacity onPress={() => handleTextPress(legoPrediction[0].PartName)}>
+            <Text key={2}>{legoPrediction[0].PartName}</Text>
+          </TouchableOpacity>,
                   // takes user to the full part information if they desire
+                  legoPrediction[1] >= 40 && 
                   <Pressable key = {3}
                     style={styles.goToPartButton}
                     onPress={() => {
@@ -258,7 +277,20 @@ import LocatePop from '../../components/LocatePop'; // adjust the path according
                       
                     }}>
                     <Text>Go To Part Page</Text>
-                  </Pressable> 
+                  </Pressable>,
+                  legoPrediction[1] < 40 &&
+                    <Image
+                      key = {5}
+                      style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
+                      source={legoPrediction[1] < 40 ? finderror : null}
+                    />,
+                  legoPrediction[1] < 40 &&
+                  <TouchableOpacity onPress={() => handleTextPress(warningText)}
+                  style={{ backgroundColor: 'white' }}>
+                  <Text key={4} style={{ color: 'red' }}>
+                    {warningText}
+                  </Text>
+                </TouchableOpacity>
                 ]:
                 <ActivityIndicator size="large" />
               }
