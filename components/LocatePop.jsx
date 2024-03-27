@@ -1,7 +1,19 @@
-import React from 'react';
-import { Modal, Text, TouchableHighlight, View, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { TouchableOpacity, Modal, Text, TouchableHighlight, View, StyleSheet } from 'react-native';
+import * as Speech from 'expo-speech';
+import ttsContext from '../config/ttsContext'; // replace with your actual path
 
-const LocatePop = ({ isVisible, onClose }) => (
+
+const LocatePop = ({ isVisible, onClose }) => {
+  const tts = useContext(ttsContext);
+
+  const handleTextPress = (text) => {
+    if (tts.ttsChoice === "true") {
+      Speech.speak(text);
+    }
+  };
+  const locateText = 'Welcome! To locate specific legos, go back to the Home page to select "locate" under a piece. Or stay on this screen and hover over a lego steadily until a red box appears, and then press on that red box for details on the piece.';
+return(
   <Modal
     animationType="slide"
     transparent={true}
@@ -9,9 +21,12 @@ const LocatePop = ({ isVisible, onClose }) => (
     onRequestClose={onClose}
   >
     <View style={styles.centeredView}>
-      <View style={styles.modalView}>
-        <Text>Welcome! To locate legos specific legos, go back to the Home page to select "locate" under a peice. Or stay in this screen and hover over a lego steadily until a red box appears, and then press on that red box for details on the peice</Text>
-
+    <View style={styles.modalView}>
+      <TouchableOpacity onPress={() => handleTextPress(locateText)}>
+        <Text>
+          {locateText}
+        </Text>
+      </TouchableOpacity>
         <TouchableHighlight 
           style={{ ...styles.button, backgroundColor: 'red' }} 
           onPress={() => {
@@ -25,6 +40,7 @@ const LocatePop = ({ isVisible, onClose }) => (
     </View>
   </Modal>
 );
+};
 
 const styles = StyleSheet.create({
   centeredView: {
