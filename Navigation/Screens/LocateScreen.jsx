@@ -47,24 +47,32 @@ function LocateScreen({ route, navigation }) {
   const [partLocation, setPartLocation] = useState(false);
   const [legos, setLegos] = useState([]);
 
+  /*
   // Use to debug updates to legoLocations
   useEffect(() => {
     console.log("lego locations updated:", legoLocations);
     legoLocations.map((prediction, index) => {
       for (var i = 0; i < legos.length; i++) {
         if (legos[i].PartID === prediction.name) {
-          console.log(legos[i]);
+          //console.log(legos[i]);
           console.log("Found Part:", legos[i].PartID);
+          setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100 ])
+          console.log("width: ", (Dimensions.get('window').width) * prediction.width);
+          console.log("height: ", ((Dimensions.get('window').height-130))* prediction.height);
+          console.log("top: ", (prediction.ycenter) * (Dimensions.get('window').height-130)) + (((Dimensions.get('window').height-130))* prediction.height/2);
+          console.log("left: ", (prediction.xcenter) * Dimensions.get('window').width) + ((Dimensions.get('window').width) * prediction.width/2);
         }
       }
+      //setShowPrediction(true); //set flag to display prediction
   });
   }, [legoLocations, legos]);
-
+  
   //Use to debug updates to legoPredictions
   useEffect(() => {
     console.log("lego prediction updated:", legoPrediction);
     console.log("show prediction updated: ", showPrediction);
   }, [legoPrediction, showPrediction]);
+  */
 
   let frame1 = 0;
   const computeRecognitionEveryNFrames1 = 60;
@@ -93,7 +101,7 @@ function LocateScreen({ route, navigation }) {
 
           const formData = new FormData();
           formData.append('size', 640);
-          formData.append('confidence', 0.01);
+          formData.append('confidence', 0.25);
           formData.append('iou', 0.45);
           formData.append('image', {
             uri: image.uri,
@@ -101,9 +109,9 @@ function LocateScreen({ route, navigation }) {
             type: 'image/jpg',
           });
 
-          axios.post('https://api.ultralytics.com/v1/predict/aYSSOaH4z5yUrYoUETcX', formData,  {
+          axios.post('https://api.ultralytics.com/v1/predict/fmiQDH8IwFsy2KZNqqZp', formData,  {
             headers: {
-              'x-api-key': '2c23bbb4564f2f2e302d6f2293e849feedd3df9018',
+              'x-api-key': '216ef9d083377da32bc3bf704fdcf69f085b4fff42',
               'Content-Type': 'multipart/form-data',
             },
           })
@@ -232,20 +240,17 @@ function LocateScreen({ route, navigation }) {
       {legoLocations.map((prediction, index) => (
         [
         <View  key = {index} onStartShouldSetResponder={() => { {
-          console.log("Inside Map Function");
           for (var i = 0; i < legos.length; i++){
-            console.log("Inside DB search function");
             if (legos[i].PartID === prediction.name){
-              console.log("Inside setLegoPrediction function");
               setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100 ])
             };
           }
           setShowPrediction(true);
         } }} style={[styles.box, {
-          width:  (Dimensions.get('window').width/400) * prediction.width, 
-          height: ((Dimensions.get('window').height-130)/512)* prediction.height,
-          top: ((prediction.ycenter/512) * (Dimensions.get('window').height-130)) - (((Dimensions.get('window').height-130)/512)* prediction.height/2), 
-          left: ((prediction.xcenter / 400) * Dimensions.get('window').width) -  ((Dimensions.get('window').width/400) * prediction.width/2),
+          width:  (Dimensions.get('window').width) * prediction.width, 
+          height: ((Dimensions.get('window').height)) * prediction.height,
+          top: ((prediction.ycenter) * (Dimensions.get('window').height)) + (((Dimensions.get('window').height))* prediction.height/2), 
+          left: ((prediction.xcenter) * Dimensions.get('window').width) +  ((Dimensions.get('window').width) * prediction.width/2),
           // left:  prediction.x
           // width: 428, 400, 415
           // height: 796, 512, 605  
