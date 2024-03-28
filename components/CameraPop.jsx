@@ -1,17 +1,35 @@
-import React from 'react';
-import { Modal, Text, TouchableHighlight, View, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { TouchableOpacity, Modal, Text, TouchableHighlight, View, StyleSheet } from 'react-native';
+import * as Speech from 'expo-speech';
+import ttsContext from '../config/ttsContext'; // replace with your actual path
 
-const CameraPop = ({ isVisible, onClose }) => (
+
+
+const CameraPop = ({ isVisible, onClose }) => {
+
+  const tts = useContext(ttsContext);
+
+const handleTextPress = (text) => {
+  if (tts.ttsChoice === "true") {
+    Speech.speak(text);
+  }
+};
+const welcomeText = 'Welcome! To continuously identify legos, press the top right tab. To only identify one piece at a time, please press the white circle below.';
+
+return(
   <Modal
     animationType="slide"
     transparent={true}
     visible={isVisible}
     onRequestClose={onClose}
   >
-    <View style={styles.centeredView}>
-      <View style={styles.modalView}>
-        <Text>Weclome! To continously identify legos, press the top right tab. To only identify one peice at a time, please press the white circle below.</Text>
-
+   <View style={styles.centeredView}>
+    <View style={styles.modalView}>
+      <TouchableOpacity onPress={() => handleTextPress(welcomeText)}>
+        <Text>
+          {welcomeText}
+        </Text>
+      </TouchableOpacity>
         <TouchableHighlight 
           style={{ ...styles.button, backgroundColor: 'red' }} 
           onPress={() => {
@@ -25,6 +43,7 @@ const CameraPop = ({ isVisible, onClose }) => (
     </View>
   </Modal>
 );
+};
 
 const styles = StyleSheet.create({
   centeredView: {

@@ -6,6 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import themeContext from '../../config/themeContext';
+import InformationModal from '../../components/Information';
+import SettingsModal from '../../components/SettingsPop';
 
 function FavoritesScreen({ route, navigation }) {
   const theme = useContext(themeContext);
@@ -38,6 +40,10 @@ function FavoritesScreen({ route, navigation }) {
 
   return (
     <View style={{ backgroundColor: theme.background }}>
+    
+    <InformationModal></InformationModal>
+    <SettingsModal></SettingsModal>
+    
       <ScrollView style={{ position: 'relative', marginBottom: 90, backgroundColor: theme.background }}>
         <Text style={{ ...styles.text, left: 20, fontWeight: 'bold', fontSize: 30, color: theme.color }}>Favorites</Text>
         <Divider style={{ marginTop: 10, marginLeft: 20, marginRight: 20 }} />
