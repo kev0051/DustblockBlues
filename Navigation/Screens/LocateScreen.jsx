@@ -232,8 +232,11 @@ function LocateScreen({ route, navigation }) {
       {legoLocations.map((prediction, index) => (
         [
         <View  key = {index} onStartShouldSetResponder={() => { {
+          console.log("Inside Map Function");
           for (var i = 0; i < legos.length; i++){
-            if (legos[i].PartID === prediction.class){
+            console.log("Inside DB search function");
+            if (legos[i].PartID === prediction.name){
+              console.log("Inside setLegoPrediction function");
               setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100 ])
             };
           }
@@ -251,7 +254,7 @@ function LocateScreen({ route, navigation }) {
           }]}
           >
             
-            <Text style ={styles.predictionClass}>{prediction.class} ({prediction.confidence.toFixed(2) * 100}%)</Text>
+            <Text style ={styles.predictionName}>{prediction.name} ({prediction.confidence.toFixed(2) * 100}%)</Text>
           </View>,
           
         
@@ -342,7 +345,7 @@ const styles = StyleSheet.create({
     zIndex: 75,
     borderColor: '#ff0000',
   },
-  predictionClass: {
+  predictionName: {
     position: 'absolute',
     color: '#ff0000',
     top: -20,
