@@ -306,21 +306,18 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
           for (var i = 0; i < legos.length; i++){
             if (legos[i].PartID === RESULT_MAPPING[highestPrediction]){
               const predictionPercentage = Number(100*prediction[highestPrediction]).toFixed(1);
-          setLegoPrediction([legos[i], predictionPercentage])
-          if (predictionPercentage < 80) {
-            setShowCameraPop(true);
-          }
+              setLegoPrediction([legos[i], predictionPercentage])
+              if (predictionPercentage < 80) {
+                setShowCameraPop(true);
+              }
             }
           }
           //activates prediction modal
           setShowPrediction(true)
         }
-          
       }
       catch (e){
         console.log(e)
-        
-        
       }
       setLoading(false)
     };
