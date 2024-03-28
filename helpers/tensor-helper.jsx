@@ -10,7 +10,7 @@ const BITMAP_DIMENSION = 224;
 
 // Load the model from a URL instead
 const loadModel = async () => {
-  const model = await tf.loadLayersModel('https://cdn.jsdelivr.net/gh/ReedNathan001/DBBDatabase@main/model.json');
+  const model = await tf.loadGraphModel((bundleResourceIO(modelJson, [modelWeights1, modelWeights2, modelWeights3, modelWeights4])));
   return model;
 };
 // 0: channel from JPEG-encoded image
