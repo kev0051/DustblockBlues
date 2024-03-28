@@ -17,6 +17,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LocatePop from '../../components/LocatePop'; // adjust the path according to your file structure
+import axios from 'axios'; // Import Axios
 
 function LocateScreen({ route, navigation }) {
   const [showLocatePop, setShowLocatePop] = useState(false);
@@ -41,16 +42,34 @@ function LocateScreen({ route, navigation }) {
   let cameraRef = useRef();
 
   const [legoPrediction, setLegoPrediction] = useState(null);
-  const [showPrediction, setShowPrediction] = useState(false);
+  const [showPrediction, setShowPrediction] = useState(false);  
   const [legoLocations, setLegoLocations] = useState([]);
   const [partLocation, setPartLocation] = useState(false);
   const [legos, setLegos] = useState([]);
+
+  // Use to debug updates to legoLocations
+  useEffect(() => {
+    console.log("lego locations updated:", legoLocations);
+    legoLocations.map((prediction, index) => {
+      for (var i = 0; i < legos.length; i++) {
+        if (legos[i].PartID === prediction.name) {
+          console.log(legos[i]);
+          console.log("Found Part:", legos[i].PartID);
+        }
+      }
+  });
+  }, [legoLocations, legos]);
+
+  //Use to debug updates to legoPredictions
+  useEffect(() => {
+    console.log("lego prediction updated:", legoPrediction);
+    console.log("show prediction updated: ", showPrediction);
+  }, [legoPrediction, showPrediction]);
 
   let frame1 = 0;
   const computeRecognitionEveryNFrames1 = 60;
   function takePic() {
     const loop = async () => {
-      try {
         if (frame1 % computeRecognitionEveryNFrames1 === 0) {
           let options = {
             base64: true,
@@ -82,60 +101,50 @@ function LocateScreen({ route, navigation }) {
             type: 'image/jpg',
           });
 
-          fetch('https://api.ultralytics.com/v1/predict/aYSSOaH4z5yUrYoUETcX', {
-            method: 'POST',
+          axios.post('https://api.ultralytics.com/v1/predict/aYSSOaH4z5yUrYoUETcX', formData,  {
             headers: {
               'x-api-key': '2c23bbb4564f2f2e302d6f2293e849feedd3df9018',
               'Content-Type': 'multipart/form-data',
             },
-            body: formData,
           })
-            .then((response) => response.json())
-            .then((responseJson) => {
+            .then((response) => {
               let res = [];
-              try {
-                //console.log(responseJson.data);
-                res = responseJson.data;
+              //console.log(responseJson.data);
+              res = response.data.data;
 
-                // function to sanatize output
-                const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
-                for(var i = 0; i < res.length; i++){
-                  const match = res[i].name.match(regex); // Extract the number using regex
-                  //console.log(match[1]);
-                  res[i].name = match[1];
-                }
-                console.log(res);
-
+              // function to sanatize output
+              const regex = /\((\d+)\)/; // Regular expression to match the number inside parentheses
+              for(var i = 0; i < res.length; i++){
+                const match = res[i].name.match(regex); // Extract the number using regex
+                //console.log(match[1]);
+                res[i].name = match[1];
+              }
+              //console.log("res: ", res);
+              try{
                 if (route.params.partId) {
                   for (var i = 0; i < res.length; i++) {
                     if (res[i].name === route.params.partId) {
-                      res = [{ ...responseJson.data[i], confidence: responseJson.data[i].confidence * 100 }];
+                      res = [{ ...response.data.data[i], confidence: response.data.data[i].confidence * 100 }];
                       setPartLocation(true);
                       Vibration.vibrate();
                     }
                   }
                 }
               } catch (e) {
-                res = res;
-                console.log(res);
               } finally {
-                setLegoLocations(res);
-                console.log(legoLocations);
+              setLegoLocations(res);
               }
+
             })
             .catch((error) => {
               console.error(error);
             });
-
-          requestAnimationFrame(loop);
         }
-      } catch (error) {
-        return;
-      }
-    };
+        requestAnimationFrame(loop);
+      } 
 
     loop();
-  }
+  };
 
   useEffect(() => {
     AsyncStorage.getItem('LegoDB').then((database) => {
@@ -215,63 +224,53 @@ function LocateScreen({ route, navigation }) {
               <Text>Dismiss</Text>
             </Pressable>
           </View>
-`        </View>`
+       </View>
       </Modal>
 
       <Camera style={styles.container} ref={cameraRef} onCameraReady={() => takePic()} />
 
       {legoLocations.map((prediction, index) => (
-        <View
-          key={index}
-          onStartShouldSetResponder={() => {
-            console.log(prediction);
-            for (var i = 0; i < legos.length; i++) {
-              if (legos[i].PartID === prediction.name) {
-                console.log("Found Part:" + partID);
-                setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100]);
-              }
-            }
-            setShowPrediction(true);
-          }}
-          style={[
-            styles.box,
-            {
-              width: (Dimensions.get('window').width / 400) * prediction.width,
-              height: ((Dimensions.get('window').height - 130) / 512) * prediction.height,
-              top:
-                (prediction.ycenter / 512) * (Dimensions.get('window').height - 130) -
-                (((Dimensions.get('window').height - 130) / 512) * prediction.height) / 2,
-              left:
-                (prediction.xcenter / 400) * Dimensions.get('window').width -
-                ((Dimensions.get('window').width / 400) * prediction.width) / 2,
-            },
-          ]}>
-          <Text style={styles.predictionClass}>
-            {prediction.name} ({(prediction.confidence * 100).toFixed(2)}%)
-          </Text>
-        </View>
+        [
+        <View  key = {index} onStartShouldSetResponder={() => { {
+          for (var i = 0; i < legos.length; i++){
+            if (legos[i].PartID === prediction.class){
+              setLegoPrediction([legos[i], prediction.confidence.toFixed(2) * 100 ])
+            };
+          }
+          setShowPrediction(true);
+        } }} style={[styles.box, {
+          width:  (Dimensions.get('window').width/400) * prediction.width, 
+          height: ((Dimensions.get('window').height-130)/512)* prediction.height,
+          top: ((prediction.ycenter/512) * (Dimensions.get('window').height-130)) - (((Dimensions.get('window').height-130)/512)* prediction.height/2), 
+          left: ((prediction.xcenter / 400) * Dimensions.get('window').width) -  ((Dimensions.get('window').width/400) * prediction.width/2),
+          // left:  prediction.x
+          // width: 428, 400, 415
+          // height: 796, 512, 605  
+          // left: ,
+          // right:  
+          }]}
+          >
+            
+            <Text style ={styles.predictionClass}>{prediction.class} ({prediction.confidence.toFixed(2) * 100}%)</Text>
+          </View>,
+          
+        
+          partLocation && 
+            <View key = {index+1} style={ styles.partLocationContainer}>
+                <Text style={ [{fontSize: 30,left: '6%',color: "#ff0000",}]}>Part Located!</Text>
+                <Text style={ styles.partLocationText}>Width:{((Dimensions.get('window').width/400) * prediction.width).toFixed(0)}</Text>
+                <Text style={ styles.partLocationText}>Height:{(((Dimensions.get('window').height-130)/512)* prediction.height).toFixed(0)}</Text>
+                <Text style={ styles.partLocationText}>X:{(((prediction.y/512) * (Dimensions.get('window').height-130)) - (((Dimensions.get('window').height-130)/512)* prediction.height/2)).toFixed(0)}</Text>
+                <Text style={ styles.partLocationText}>Y:{(((prediction.x / 400) * Dimensions.get('window').width) -  ((Dimensions.get('window').width/400) * prediction.width/2)).toFixed(0)}</Text>
+            </View>]
+          
+        
       ))}
+       
+      </View>
+    );
+  };
 
-      {partLocation && (
-        <View style={styles.partLocationContainer}>
-          <Text style={[{ fontSize: 30, left: '6%', color: '#ff0000' }]}>Part Located!</Text>
-          <Text style={styles.partLocationText}>
-            Width:{((Dimensions.get('window').width / 400) * prediction.width).toFixed(0)}
-          </Text>
-          <Text style={styles.partLocationText}>
-            Height:{(((Dimensions.get('window').height - 130) / 512) * prediction.height).toFixed(0)}
-          </Text>
-          <Text style={styles.partLocationText}>
-            X:{(((prediction.ycenter / 512) * (Dimensions.get('window').height - 130)) - (((Dimensions.get('window').height - 130) / 512) * prediction.height / 2)).toFixed(0)}
-          </Text>
-          <Text style={styles.partLocationText}>
-            Y:{(((prediction.xcenter / 400) * Dimensions.get('window').width) - ((Dimensions.get('window').width / 400) * prediction.width / 2)).toFixed(0)}
-          </Text>
-        </View>
-      )}
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
