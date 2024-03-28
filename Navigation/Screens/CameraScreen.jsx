@@ -5,7 +5,7 @@ import {startPrediction} from '../../helpers/tensor-helper';
 import {Camera} from 'expo-camera';
 import * as tf from "@tensorflow/tfjs";
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
-import {bundleResourceIO } from '@tensorflow/tfjs-react-native';
+import {fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { Switch } from "@react-native-material/core";
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as Speech from 'expo-speech';
@@ -29,10 +29,26 @@ import tts from '../../config/tts';
     const model = await tf.loadLayersModel('https://cdn.jsdelivr.net/gh/ReedNathan001/DBBDatabase@main/model.json');
     return model;
   };*/
-  const modelWeights = require('../../model/weights.bin');
+  const modelWeights1 = require('../../model/weights1of4.bin');
+  const modelWeights2 = require('../../model/weights2of4.bin');
+  const modelWeights3 = require('../../model/weights3of4.bin');
+  const modelWeights4 = require('../../model/weights4of4.bin');
 
   //the order of lego IDs based on trained model
-  const RESULT_MAPPING = ["370526","370626","370726","370826","373726","4121715","4140806","4142822","4142865","4153707","4153718","4162857","4177431","4177434","4198367","4206482","4211639","4211651","4211713","4211805","4211807","4211815","4211866","4495930","4499858","4502595","4509376","4513174","4514553","4522934","4535768","4539880","4540797","4541326","4542578","4543490","4552347","4565452","4566249","4566251","4582792","4585040","4611705","4640536","4652235","4666579","6007973","6008527","6012451","6028041","6031821","6035364","6083620","6114171","6133119","6173127","6178438","6178439","6178448","6185471","6195314","6227055","6227941","6239012","6261375","6261688","6265091","6268905","6271161","6271167","6271827","6271869","6273715","6275844","6276836","6276854","6276951","6278132","6279881","6280394","6282158","6284188","6284699","6288218","6296844","6310609","6313453","6313520","6321303","6321305","6321744","6325504","6326620","6327548","6331428","6331441","6346535"];
+  const RESULT_MAPPING = [
+    "4211866", "4540797", "4542578", "4211815", "6284188", "6325504", "4502595", "6331441",
+    "4495930", "6326620", "4514554", "6288218", "6275844", "370626", "4543490", "6028041",
+    "6268905", "6279881", "6083620", "4177434", "4198367", "6276836", "4509912", "4495412",
+    "4153707", "4211807", "4652235", "6009019", "4121715", "6284699", "4539880", "4566251",
+    "4666579", "6007973", "4634091", "4509376", "4611705", "4211510", "4211805", "6008527",
+    "4585040", "4142865", "370826", "6271869", "6280394", "4121667", "6313520", "4565452",
+    "370526", "4225033", "4582792", "4142822", "6185471", "4513174", "373726", "4522934",
+    "6195314", "4162857", "6035364", "4141270", "6012451", "6278132", "4239601", "4499858",
+    "4535768", "6031821", "4211651", "4211639", "4153718", "4640536", "6273715", "6265091",
+    "4140806", "4541326", "370726", "6173127", "4552347", "4566249", "4177431", "4211713",
+    "6346535", "4587275", "6261375", "4142236", "4514553", "6271161"
+];
+
   
   //camera screen function with navigation as argument
   function CameraScreen({navigation}){
@@ -148,7 +164,12 @@ useEffect(() => {
           setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
           //initializes tensorflow and loads the model as soon as camera page is loaded
           await initialiseTensorflow();
-          setModel(await tf.loadLayersModel(bundleResourceIO(modelJson, modelWeights)));
+          try{
+            setModel(await tf.loadGraphModel(bundleResourceIO(modelJson, [modelWeights1, modelWeights2, modelWeights3, modelWeights4])));
+          }
+          catch(e){
+            console.error(e);
+          }
           //const model = await loadModel();
           //setModel(model);
         })();
