@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useContext } from 'react';
-import {Image,View,StyleSheet,Dimensions,Pressable,Modal,Text,ActivityIndicator, Vibration} from 'react-native';
+import {TouchableOpacity,Image,View,StyleSheet,Dimensions,Pressable,Modal,Text,ActivityIndicator, Vibration} from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import {AutoFocus, Camera} from 'expo-camera';
 import axios from 'axios';
