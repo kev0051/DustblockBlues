@@ -315,17 +315,17 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
         {legoPrediction ? 
           [
             <Text key= {0} style={{ fontSize: 30, color:"black", fontWeight:'bold'}}onPress={speakPrediction}> {"Prediction: " + legoPrediction[1] + "%"}</Text>,
-            legoPrediction[1] >= 80 && 
+            legoPrediction[1] >= 50 && 
             <Image
               key = {1}
               style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
               source={{ uri: legoPrediction[0].ImageURL }}
             />,
-            legoPrediction[1] >= 80 && 
+            legoPrediction[1] >= 50 && 
             <TouchableOpacity onPress={() => handleTextPress(legoPrediction[0].PartName)}>
             <Text key={2}>{legoPrediction[0].PartName}</Text>
           </TouchableOpacity>,
-            legoPrediction[1] >= 80 && 
+            legoPrediction[1] >= 50 && 
               <Pressable key = {3}
                 style={styles.goToPartButton}
                 onPress={() => {
@@ -336,13 +336,13 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
                 <Text>Go To Part Page</Text>
               </Pressable>, 
                   // Add a message when the prediction is below 50
-    legoPrediction[1] < 80 &&
+    legoPrediction[1] < 50 &&
     <Image
   key = {5}
   style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
-  source={legoPrediction[1] < 80 ? finderror : null}
+  source={legoPrediction[1] < 50 ? finderror : null}
 />,
-    legoPrediction[1] < 80 &&
+    legoPrediction[1] < 50 &&
     <TouchableOpacity onPress={() => handleTextPress(warningText)}
         style={{ backgroundColor: 'white' }}>
         <Text key={4} style={{ color: 'red' }}>
