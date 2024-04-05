@@ -255,18 +255,18 @@ import tts from '../../config/tts';
               {legoPrediction ? 
                 [
                   <Text key= {0} style={{ fontSize: 30, color:"black", fontWeight:'bold'}}onPress={speakPrediction}> {"Prediction: " + legoPrediction[1] + "%"}</Text>,
-                  legoPrediction[1] >= 40 && 
+                  legoPrediction[1] >= 50 && 
                   <Image
                   key = {1}
                   style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
                   source={{ uri: legoPrediction[0].ImageURL }}
                   />,
-                  legoPrediction[1] >= 40 && 
+                  legoPrediction[1] >= 50 && 
                   <TouchableOpacity onPress={() => handleTextPress(legoPrediction[0].PartName)}>
             <Text key={2}>{legoPrediction[0].PartName}</Text>
           </TouchableOpacity>,
                   // takes user to the full part information if they desire
-                  legoPrediction[1] >= 40 && 
+                  legoPrediction[1] >= 50 && 
                   <Pressable key = {3}
                     style={styles.goToPartButton}
                     onPress={() => {
@@ -278,13 +278,13 @@ import tts from '../../config/tts';
                     }}>
                     <Text>Go To Part Page</Text>
                   </Pressable>,
-                  legoPrediction[1] < 40 &&
+                  legoPrediction[1] < 50 &&
                     <Image
                       key = {5}
                       style={{ width: '50%', height: "50%", resizeMode: 'contain' }}
-                      source={legoPrediction[1] < 40 ? finderror : null}
+                      source={legoPrediction[1] < 50 ? finderror : null}
                     />,
-                  legoPrediction[1] < 40 &&
+                  legoPrediction[1] < 50 &&
                   <TouchableOpacity onPress={() => handleTextPress(warningText)}
                   style={{ backgroundColor: 'white' }}>
                   <Text key={4} style={{ color: 'red' }}>
