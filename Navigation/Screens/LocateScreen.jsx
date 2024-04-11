@@ -249,8 +249,8 @@ function LocateScreen({ route, navigation }) {
         } }} style={[styles.box, {
           width:  (Dimensions.get('window').width) * prediction.width, 
           height: ((Dimensions.get('window').height)) * prediction.height,
-          top: ((prediction.ycenter) * (Dimensions.get('window').height)) + (((Dimensions.get('window').height))* prediction.height/2), 
-          left: ((prediction.xcenter) * Dimensions.get('window').width) +  ((Dimensions.get('window').width) * prediction.width/2),
+          bottom: ((prediction.ycenter) * (Dimensions.get('window').height) + 130), 
+          left: ((prediction.xcenter) * Dimensions.get('window').width),
           // left:  prediction.x
           // width: 428, 400, 415
           // height: 796, 512, 605  
@@ -266,10 +266,10 @@ function LocateScreen({ route, navigation }) {
           partLocation && 
             <View key = {index+1} style={ styles.partLocationContainer}>
                 <Text style={ [{fontSize: 30,left: '6%',color: "#ff0000",}]}>Part Located!</Text>
-                <Text style={ styles.partLocationText}>Width:{((Dimensions.get('window').width/400) * prediction.width).toFixed(0)}</Text>
-                <Text style={ styles.partLocationText}>Height:{(((Dimensions.get('window').height-130)/512)* prediction.height).toFixed(0)}</Text>
-                <Text style={ styles.partLocationText}>X:{(((prediction.y/512) * (Dimensions.get('window').height-130)) - (((Dimensions.get('window').height-130)/512)* prediction.height/2)).toFixed(0)}</Text>
-                <Text style={ styles.partLocationText}>Y:{(((prediction.x / 400) * Dimensions.get('window').width) -  ((Dimensions.get('window').width/400) * prediction.width/2)).toFixed(0)}</Text>
+                <Text style={ styles.partLocationText}>Width:{((Dimensions.get('window').width) * prediction.width).toFixed(0)}</Text>
+                <Text style={ styles.partLocationText}>Height:{(((Dimensions.get('window').height))* prediction.height).toFixed(0)}</Text>
+                <Text style={ styles.partLocationText}>Y:{((Dimensions.get('window').height) - (((prediction.ycenter) * (Dimensions.get('window').height)) + 130))}</Text>
+                <Text style={ styles.partLocationText}>X:{(((prediction.xcenter) * Dimensions.get('window').width))}</Text>
             </View>]
           
         
