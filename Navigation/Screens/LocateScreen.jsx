@@ -194,7 +194,7 @@ function LocateScreen({ route, navigation }) {
   } else if (!hasCameraPermission) {
     return <Text>Permission for camera not granted. Please change this in settings.</Text>;
   }
-
+  
   return (
     <View style={styles.container}>
       {showLocatePop && <LocatePop isVisible={showLocatePop} onClose={() => setShowLocatePop(false)} />}
