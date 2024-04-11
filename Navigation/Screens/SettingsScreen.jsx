@@ -9,7 +9,6 @@ import themeContext from "../../config/themeContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ttsContext from "../../config/ttsContext";
-
 /* Function SettingsScreen
    Purpose: Displays Settings
    Notes:
@@ -17,7 +16,6 @@ import ttsContext from "../../config/ttsContext";
       Line 25-37: Displays Dark Mode Switch
       Lines 38-41: Displays Enable Accessibility Features Switch
 */
-
 function SettingsScreen({navigation}){
     const theme = useContext(themeContext);
     const [themeMode, setThemeMode] = useState(false);
