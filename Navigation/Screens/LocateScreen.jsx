@@ -308,7 +308,7 @@ function LocateScreen({ route, navigation }) {
                 <Text style={ [{fontSize: 30,left: '6%',color: "#ff0000",}]}>Part Located!</Text>
                 <Text style={ styles.partLocationText}>Width:{((Dimensions.get('window').width) * prediction.width).toFixed(0)}</Text>
                 <Text style={ styles.partLocationText}>Height:{(((Dimensions.get('window').height))* prediction.height).toFixed(0)}</Text>
-                <Text style={ styles.partLocationText}>Y:{((Dimensions.get('window').height) - (((prediction.ycenter) * (Dimensions.get('window').height)) + 130))}</Text>
+                <Text style={ styles.partLocationText}>Y:{((Dimensions.get('window').height) - (((prediction.ycenter) * (Dimensions.get('window').height))))}</Text>
                 <Text style={ styles.partLocationText}>X:{(((prediction.xcenter) * Dimensions.get('window').width))}</Text>
             </View>]
           
