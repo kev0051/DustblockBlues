@@ -29,6 +29,7 @@ import tts from '../../config/tts';
     const model = await tf.loadLayersModel('https://cdn.jsdelivr.net/gh/ReedNathan001/DBBDatabase@main/model.json');
     return model;
   };*/
+
   const modelWeights1 = require('../../model/weights1of4.bin');
   const modelWeights2 = require('../../model/weights2of4.bin');
   const modelWeights3 = require('../../model/weights3of4.bin');
@@ -186,15 +187,16 @@ useEffect(() => {
       //live stream predictions, glitches in the beginning because model is still loading, needs to toggle button on and off to unglitch
       let frame = 0;
       const computeRecognitionEveryNFrames = 60;
-      const handleCameraStream = async (images: IterableIterator<tf.Tensor3D>) => {
+      const handleCameraStream = async (images) => {
             //loops every frame
+            console.log(images);
             const loop = async () => {
                 if(frame % computeRecognitionEveryNFrames === 0){
 
                     const nextImageTensor = images.next().value;
                     //this is where the prediction happens based on the model
                     try{ 
-                      const imageData2 = tf.image.resizeBilinear(nextImageTensor,[224,224])
+                      const imageData2 = tf.image.resizeBilinear(nextImageTensor,[640,640])
                       const fin = tf.expandDims(imageData2, 0);
                       const normalized = fin.cast('float32').div(127.5).sub(1);
                       //if the model exists, the prediction part starts
@@ -273,11 +275,12 @@ useEffect(() => {
 let frameCount = 0;
 const captureEveryNFrames = 30; // Change this to capture frames less or more frequently
 //30fps so 1 frame captured per second
-const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
+const handleTensorCapture = async (images) => {
+  console.log(images);
   const loop = async () => { 
     if (frameCount % captureEveryNFrames === 0) {
       const tensor = images.next().value;
-      const resizedTensor = tf.image.resizeBilinear(tensor, [224, 224]);
+      const resizedTensor = tf.image.resizeBilinear(tensor, [640, 640]);
       setTensorImage(resizedTensor);
     }
     frameCount++;
@@ -292,11 +295,15 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
       setLoading(true)
       //prediction preperations
       try{
-        const imageData2 = tf.image.resizeBilinear(tensorImage,[224,224])   
+        const imageData2 = tf.image.resizeBilinear(tensorImage,[640,640])
+        console.log(imageData2);   
         const fin = tf.expandDims(imageData2, 0);
+        console.log(fin); 
         const normalized = fin.cast('float32').div(127.5).sub(1);
+        console.log(normalized); 
         //prediction
         if (model){
+          //console.log(model);
           const prediction = await startPrediction(model, normalized);
           const highestPrediction = prediction.indexOf(
             Math.max.apply(null, prediction),
@@ -419,8 +426,8 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
             style={styles.camera}
             type={Camera.Constants.Type.back}
             onReady={(tensors)=>handleCameraStream(tensors)}
-            resizeHeight={224}
-            resizeWidth={224}
+            resizeHeight={640}
+            resizeWidth={640}
             resizeDepth={3}
             autorender={true}
             cameraTextureHeight={1920}
@@ -435,8 +442,8 @@ const handleTensorCapture = async (images: IterableIterator<tf.Tensor3D>) => {
                 type={Camera.Constants.Type.back}
                 onReady={(tensors)=>handleTensorCapture(tensors)}
                 // onReady={()=>console.log("yes")}
-                resizeHeight={224}
-                resizeWidth={224}
+                resizeHeight={640}
+                resizeWidth={640}
                 resizeDepth={3}
                 autorender={true}
                 cameraTextureHeight={1920} //480
