@@ -13,7 +13,7 @@ B: Assumptions
     - We assume the user  will have a working IOS(14.8+)/Android(8.1+) with the Expo Go application phone to test the program
 
 C: Dependencies
-    -To install all necessary dependencies, run the line `npm install` in the source code folder. To view a list of all included dependencies, read the package.json file.
+    -To install all necessary dependencies, run the line `yarn install` in the source code folder. To view a list of all included dependencies, read the package.json file.
     -The only API call made is to roboflow model to locate legos on the screen and retrieve their position on the screen.
 
 D: Constraints
