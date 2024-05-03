@@ -17,7 +17,7 @@ C: Dependencies
     -The only API call made is to roboflow model to locate legos on the screen and retrieve their position on the screen.
 
 D: Constraints
-    -Identification model is limited and works about 60% of the time, also has trouble with similar pieces
+    -Identification model is limited and works about 50% of the time, also has trouble with similar pieces
     -Locating model works extremely well but only with 23 parts, we did not have enough time to implement all parts (parts that work: 4513174, 4666579,  4121715, 4206482, 4640536, 4514553, 4198367, 4173941, 4153707, 4552347, 4248204, 4211651, 4162857, 6271161, 4652235, 4535768, 4582792, 4540797, 6195314, 6271827, 6331428, 6313453   )
     -App uses too much ram and gpu, needs to be made light
     -App is too heavy since there is no database and all parts are located locally, there is no backend
