@@ -29,7 +29,7 @@ F: Data Creation
     - The parts are all located in the source code, thus there is no database needed to run the app. All lego part data is located in the database.json file.
 
 G: Admin Credentials
-    - N/A
+    - API keys for roboflow and ultralytics will eventually expire, and new keys will need to be attained then by registering accounts.
 
 H: Deployment process
     - Unzip the file 
