@@ -34,25 +34,11 @@ G: Admin Credentials
 H: Deployment process
     - Unzip the file 
     - Open the file with your IDE 
-        - if your phone is not on the same internet connection as your computer you will need to use the command "expo start --tunnel"
+        - if your phone is not on the same internet connection as your computer you will need to use the command "npx expo start --tunnel"
+        - but if this fails, try yard add expo@^49.0.0 in your IDE terminal, then npx expo-doctor, npx expo install --check, and then retry start above
     - Open the expo go app on your phone
     - Scan the QR code provided in the terminal
 
-# How to Deploy
-
-yarn install
-
-npx expo start
-
-Or if facing issues, try:
-
-yard add expo@^49.0.0
-
-npx expo-doctor
-
-npx expo install --check
-
-npx expo start
 
 # TIL
 nodemodules handled by package managers. 
